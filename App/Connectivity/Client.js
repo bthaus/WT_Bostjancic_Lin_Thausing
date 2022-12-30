@@ -29,6 +29,22 @@ module.exports = {
              
     
             })
+    },
+    getCinema: function(){
+        return new Promise((resolve,reject)=>{
+            fetch('http://localhost:3000/getCinema').then((response)=>{
+                return response.json();
+               }).then((data)=>{
+                console.log("json received")
+               resolve(data);
+               }).catch((err)=>{
+                console.log("some error happened")
+                reject(err);
+               })
+        })
+       
     }
 
  }
+
+

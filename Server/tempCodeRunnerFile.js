@@ -1,1 +1,1 @@
-testFunctionalJson
+json(JSON.parse(JsonHandler.getCinema()));

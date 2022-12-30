@@ -8,36 +8,14 @@ app.use(express.static('public')); // host public folder
 JsonHandler.initDefault();
 
 
+app.get('/getCinemaHall/:ID',function(req,res){
+let ID=req.params.ID;
 
-app.get('/helloWorld',function(req,res){
-    res.type('json');
-   console.log(req.body) 
-   res.json({argument:'hello world',
-type:'testmessage'
-
-});
-app.get('/test',function(req,res){
-   res.json();
 })
+app.get('/getCinema',function(req,res){
+    console.log("cinema requested")
+res.json(JsonHandler.getCinema());
 })
-app.get('/getCinema/')
-
-
-function Image(width,height,bitdepth,rawsize,pixels){
-    this.width=width;
-    this.height=height;
-    this.bitdepth=bitdepth;
-    this.rawsize=rawsize;
-    this.pixels=pixels;
-    this.print=()=>{
-        let checker=0;
-        for(let key in this){
-            checker++;
-            if(checker<6)   console.log(key+' '+this[key]);
-       
-          }
-    }
-    }
 
 
 

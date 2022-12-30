@@ -1,0 +1,1 @@
+json(JSON.parse(JsonHandler.getCinema()));

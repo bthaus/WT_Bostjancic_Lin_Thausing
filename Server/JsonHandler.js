@@ -12,6 +12,8 @@ class UserList{
 class Hall{
     constructor(numSeats,seatType,features){
         const seats=new Array(numSeats);
+        const moviess=new Array(10)
+        this.schedule=moviess
         let rows=numSeats/10;
         let counter=0;
         this.features=features;
@@ -26,6 +28,18 @@ class Hall{
     }
     addSeat(seat){
         this.seats.push(seat)
+    }
+    addMovies(movies){
+        this.movies=movies;
+    }
+    addMovie(movie){
+        this.movies.push(movie);
+    }
+    addPresentations(presentations){
+        this.schedule=presentations;
+    }
+    addPresentation(Presentation){
+        this.schedule.push(Presentation);
     }
 }
 class Seat{
@@ -57,10 +71,32 @@ class User{
         this.type=type;
     }
 }
+class Movie{
+    constructor(name, description, duration, minimumAge){
+        const reviews=new Array(1);
+        reviews.push("Die Hard is a classic action film that combines high-stakes tension, expertly choreographed action scenes, and a healthy dose of humor, making it a must-see for any fan of the genre.")
+        this.reviews=reviews;
+        this.name=name;
+        this.description=description;
+        this.duration=duration;
+        this.minimumAge=minimumAge;
+    }
+   
+}
+class Presentation{
+    //movie= Movie, date=Date
+    constructor(movie,date){
+        this.movie=movie;
+        this.start=date;
+    }
+    
+}
+
+
 
  function writeFile(data,filename){
 //WT_Bostjancic_Lin_Thausing/Server/
-        fs.writeFileSync('./Server/'+filename+'.json', data, (err) => {
+        fs.writeFileSync('./Server/JSONfiles/'+filename+'.json', data, (err) => {
             if (err){
                 return err;
             } 
@@ -77,7 +113,6 @@ users.push(new User("Panda","PandaPW",manager));
 users.push(new User("Martin","martinpw",customer));
 let userlist=JSON.stringify(new UserList(users));
 writeFile(userlist,"Users")
- 
 
 }
 function addUser(user){
@@ -89,13 +124,21 @@ let ima=new Cinema(3,7,'normal');
 let hall=new Hall(10,"luxury","atmos");
 hall.addSeat(new Seat(1,0,"replacable"))
 ima.addHall(hall)   
+const schedule=new Array(3);
+schedule.push(new Presentation(new Movie("die hard","dying hard",120,18)),new Date("July 4 1776 12:30"))
+schedule.push(new Presentation(new Movie("die hard2","hardly dying",120,18)),new Date("July 4 1776 14:30"))
+schedule.push(new Presentation(new Movie("die hard3","dye haar",120,18)),new Date("July 4 1776 16:30"))
+
+ima.halls.forEach(element => {
+    element.addPresentations(schedule)
+});
 let data=JSON.stringify(ima);
 writeFile(data,"Cinema")
 
 }
 function readFileByName(name){
     console.log("reading "+ name)
-      return fs.readFileSync('./Server/'+name+'.json', 'utf8', (err, data) => {
+      return fs.readFileSync('./Server/JSONfiles/'+name+'.json', 'utf8', (err, data) => {
             if (err) return err;
             console.log("successfully read")
           });
@@ -154,7 +197,8 @@ module.exports = {
         console.log("user already in the system")
         
          
-    }
+    },
+    addPresentation: function(movie,)
 
     
  }

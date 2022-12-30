@@ -1,4 +1,5 @@
 let fs = require('fs');
+
 const users=[];
 let manager="Manager";
 let customer="Customer";
@@ -58,9 +59,11 @@ class User{
 }
 
  function writeFile(data,filename){
-
-        fs.writeFileSync('WT_Bostjancic_Lin_Thausing/Server/'+filename+'.json', data, (err) => {
-            if (err) return err;
+//WT_Bostjancic_Lin_Thausing/Server/
+        fs.writeFileSync('./Server/'+filename+'.json', data, (err) => {
+            if (err){
+                return err;
+            } 
             else  {
                 console.log("successfully written")
                 return data;  
@@ -92,7 +95,7 @@ writeFile(data,"Cinema")
 }
 function readFileByName(name){
     console.log("reading "+ name)
-      return fs.readFileSync('WT_Bostjancic_Lin_Thausing/Server/'+name+'.json', 'utf8', (err, data) => {
+      return fs.readFileSync('./Server/'+name+'.json', 'utf8', (err, data) => {
             if (err) return err;
             console.log("successfully read")
           });

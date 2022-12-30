@@ -11,7 +11,7 @@ JsonHandler.initDefault();
 
 app.get('/helloWorld',function(req,res){
     res.type('json');
-    
+   console.log(req.body) 
    res.json({argument:'hello world',
 type:'testmessage'
 
@@ -20,6 +20,7 @@ app.get('/test',function(req,res){
    res.json();
 })
 })
+app.get('/getCinema/')
 
 
 function Image(width,height,bitdepth,rawsize,pixels){

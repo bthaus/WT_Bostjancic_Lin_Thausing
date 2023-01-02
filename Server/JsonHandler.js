@@ -110,6 +110,7 @@ class Presentation{
 function initDefaultUsers(){
 users.push(new User("Bodo","BodoPasswort",manager));
 users.push(new User("Panda","PandaPW",manager));
+users.push(new User('melly',"mellyPW",customer));
 users.push(new User("Martin","martinpw",customer));
 let userlist=JSON.stringify(new UserList(users));
 writeFile(userlist,"Users")
@@ -198,7 +199,9 @@ module.exports = {
         
          
     },
-    addPresentation: function(movie,)
+    addPresentation: function(movie,){
+        
+    }
 
     
  }

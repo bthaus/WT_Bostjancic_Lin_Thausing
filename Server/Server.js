@@ -1,5 +1,6 @@
 let express = require('express');
 const app = express();
+app.use(express.json())
 const JsonHandler=require('./JsonHandler');
 let fs = require('fs');
 let cors = require('cors');
@@ -35,10 +36,9 @@ app.get('/login/:username/:password/:type',function(req,res){
 })
 
 app.post('/setHall/:username/:password',function(req,res){
-    console.log(req.json())
-  req.json().then((data)=>{
-        console.log()
-    })
+    console.log("postrequest sethall")
+    req.body.
+    console.log(hall)
 })
 
 

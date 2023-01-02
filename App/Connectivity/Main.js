@@ -1,7 +1,7 @@
 
-const JsonHandler = require('../../Server/JsonHandler');
+const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
-
+/*
 //sample implementation for getting a cinema
 Client.getCinema().then((data)=>{
    let obj=JSON.parse(data)
@@ -21,7 +21,8 @@ Client.login("Bodo","asd","Manager").then((response)=>{
     console.log(response);
 })
 
+*/
+let hall=new Def.Hall(25,"Normal","3D");
+Client.addHall(hall,"Bodo","BodoPasswort");
 
-let test=new JsonHandler.Hall(123);
-console.log("here"+test)
 

@@ -58,9 +58,9 @@ module.exports = {
                })
         })
     },
-    addHall:function(hall){
+    addHall:function(hall,username,password){
         return new Promise((resolve,reject)=>{
-            fetch('http://localhost:3000/setHall/'+username+'/'+password+'/'+type,{
+            fetch('http://localhost:3000/setHall/'+username+'/'+password,{
                 method: 'POST',
                 body: JSON.stringify(hall)
             }).then((response)=>{

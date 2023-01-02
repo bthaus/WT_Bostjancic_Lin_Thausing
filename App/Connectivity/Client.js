@@ -43,6 +43,20 @@ module.exports = {
                })
         })
        
+    },
+    //returns string
+    login:function(username,password,type){
+        return new Promise((resolve,reject)=>{
+            fetch('http://localhost:3000/login/'+username+'/'+password+'/'+type).then((response)=>{
+                
+                return response.json();
+               }).then((data)=>{
+                resolve(data)
+               }).catch((err)=>{
+                console.log("some error happened")
+                reject(err);
+               })
+        })
     }
 
  }

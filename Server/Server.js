@@ -12,10 +12,29 @@ app.get('/getCinemaHall/:ID',function(req,res){
 let ID=req.params.ID;
 
 })
+//input=brauchts nicht
+//output: cinema klasse als json string
 app.get('/getCinema',function(req,res){
     console.log("cinema requested")
-res.json(JsonHandler.getCinema());
+    res.json(JsonHandler.getCinema());
 })
+
+//input: username, passwort und type als string
+//output: JSON User/error 404 sorry cant find that
+app.get('/login/:username/:password/:type',function(req,res){
+    console.log("login request")
+    try {
+        let result=JsonHandler.login(req.params.username,req.params.password,req.params.type);
+    } catch (error) {
+        console.log(error.message)
+        res.status(404);
+        res.json(error.message);
+        return;
+    }
+    res.send(JSON.stringify("login successfull"));
+})
+
+app.get('')
 
 
 

@@ -50,6 +50,7 @@ class Hall{
         this.seats=seats;
 
     }
+    //todo remove, replace seat and proper implementation
     addSeat(seat){
         this.seats.push(seat)
     }
@@ -275,6 +276,13 @@ function addReview(review, movie){
 
 
 module.exports = {
+
+    Hall:class Hall{
+        constructor(test){
+            
+        }
+    },
+
     initDefault: function() {
      initDefaultData()
      initDefaultUsers()

@@ -34,6 +34,15 @@ app.get('/login/:username/:password/:type',function(req,res){
     res.send(JSON.stringify("login successfull"));
 })
 
+app.post('/setHall/:username/:password',function(req,res){
+    console.log(req.json())
+  req.json().then((data)=>{
+        console.log()
+    })
+})
+
+
+
 app.get('')
 
 

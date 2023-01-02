@@ -1,5 +1,7 @@
 
+const JsonHandler = require('../../Server/JsonHandler');
 const Client=require('./Client');
+
 //sample implementation for getting a cinema
 Client.getCinema().then((data)=>{
    let obj=JSON.parse(data)
@@ -18,4 +20,8 @@ Client.login("Bodo","asd","Manager").then((response)=>{
     console.log("logged in, printing repsonse:")
     console.log(response);
 })
+
+
+let test=new JsonHandler.Hall(123);
+console.log("here"+test)
 

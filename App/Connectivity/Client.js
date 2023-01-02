@@ -57,6 +57,22 @@ module.exports = {
                 reject(err);
                })
         })
+    },
+    addHall:function(hall){
+        return new Promise((resolve,reject)=>{
+            fetch('http://localhost:3000/setHall/'+username+'/'+password+'/'+type,{
+                method: 'POST',
+                body: JSON.stringify(hall)
+            }).then((response)=>{
+                
+                return response.json();
+               }).then((data)=>{
+                resolve(data)
+               }).catch((err)=>{
+                console.log("some error happened")
+                reject(err);
+               })
+        })
     }
 
  }

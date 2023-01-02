@@ -12,3 +12,15 @@ let checker=JsonHandler.containsUser("Bodo","BodoPasswort","Manager")
 console.log(JsonHandler.getCinema())
 console.log(checker)
 JsonHandler.adduser("asd","asd","Manager")
+
+console.log(JsonHandler.login("Bodo","BodoPasswort","Manager"))
+try {
+    console.log(JsonHandler.login("Bodo","wrong passwort","Manager"))
+} catch (error) {
+    console.log(error.message)
+}
+try {
+    console.log(JsonHandler.login("asd","wrong passwort","Manager"))
+} catch (error) {
+    console.log(error.message)
+}

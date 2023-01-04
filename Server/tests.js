@@ -69,7 +69,12 @@ try {
 try {
     JsonHandler.removeHall(0);
     JsonHandler.removeHall(0);
-
+} catch (error) {
+    console.log(error.message)
+}
+try {
+    JsonHandler.removeUser(0);
+    JsonHandler.removeUser(0);
 } catch (error) {
     console.log(error.message)
 }

@@ -54,7 +54,7 @@ module.exports = {
         //          type= string of seattype
         constructor(row,number,type){
             this.ID=seatID++;
-            this.row=row;
+           this.row=row;
             this.number=number;
             this.type=type;
         }
@@ -147,10 +147,10 @@ module.exports = {
      initDefaultUsers()
  },
     addSeat: function(hallID,type,row,seatID){
-       addSeat(new module.exports.Seat(row,seatID,type),hallID);
+       return addSeat(new module.exports.Seat(row,seatID,type),hallID);
     },
     removeSeat: function(hallID,seatID){
-        removeSeat(hallID,seatID);
+       return  removeSeat(hallID,seatID);
     },
     getCinema:function(){
        return readFileByName("Cinema");
@@ -167,6 +167,9 @@ module.exports = {
     adduser: function(username,password,type){
       return addUser(new module.exports.User(username,password,type)) 
        
+    },
+    removeUser:function(userID){
+        return removeUser(userID);
     },
     addPresentation: function(movie,){
         
@@ -305,8 +308,7 @@ hall.seats.forEach(element => {
 });
 hall.seats.push(seat);
 setHall(hall);
-console.log("seat added");
-
+return seat.ID;
 }
 //manager
 function removeSeat(hallID,seatID){
@@ -324,6 +326,7 @@ if(index!=-1){
     hall.seats.splice(index,1)
     setHall(hall);
     console.log("seat removed")
+    return "seat removed"
 }else{
     throw new Error("seat not found");
 }
@@ -333,6 +336,7 @@ if(index!=-1){
 function setCinemaImpl(cinemastring){
 writeFile(cinemastring,"Cinema")
 console.log("Cinema Updated")
+return "cinema updated"
 }
 
 //all
@@ -350,10 +354,27 @@ if(checker)throw new Error("username and type combination already used");
 users.userlist.push(user);
 writeFile(JSON.stringify(users),"Users");
 console.log("users updated")
+return user.ID
 }
 //all
 function removeUser(userID){
-    //check if user exists
+
+    
+    let userlist=JSON.parse(readFileByName("Users"));
+
+    let index=-1;
+    let counter=0;
+     userlist.userlist.forEach(user => {
+        if(user.ID==userID){
+            index=counter;
+        }
+        counter++;
+     });
+     if(index==-1)throw new Error("no user with given ID found")
+     userlist.userlist.splice(index,1);
+     writeFile(JSON.stringify(userlist),"Users");
+     console.log("user deleted")
+     return "user deleted";
 }
 //manager
 function setHall(hall){
@@ -374,7 +395,10 @@ if(index!=-1){
 }
 writeFile(JSON.stringify(cinema),"Cinema");
 console.log("hall set.")
+return hall.ID;
 }
+
+
 function getHall(hallID){
     let js=readFileByName("Cinema");
     let cinema=JSON.parse(js);
@@ -411,7 +435,7 @@ cinema.halls.splice(index,1);
 
 setCinemaImpl(JSON.stringify(cinema));
 console.log("hall "+hallID+" removed successfully")
-
+return "hall removed"
 
 }
 //throws error
@@ -427,4 +451,7 @@ function removeTicket(ticketID, date){
 //customer
 function addReview(review, movie){
     
+}
+function give(arg){
+    return {"argument":+arg}
 }

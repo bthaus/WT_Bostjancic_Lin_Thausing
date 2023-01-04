@@ -31,34 +31,14 @@ module.exports = {
             })
     },
     getCinema: function(){
-        return new Promise((resolve,reject)=>{
-            fetch('http://localhost:3000/getCinema').then((response)=>{
-                return response.json();
-               }).then((data)=>{
-                console.log("json received")
-               resolve(data);
-               }).catch((err)=>{
-                console.log("some error happened")
-                reject(err);
-               })
-        })
+    return get("getCinema")
        
     },
     //returns string
     login:function(username,password,type){
-        return new Promise((resolve,reject)=>{
-            fetch('http://localhost:3000/login/'+username+'/'+password+'/'+type).then((response)=>{
-                
-                return response.json();
-               }).then((data)=>{
-                resolve(data)
-               }).catch((err)=>{
-                console.log("some error happened")
-                reject(err);
-               })
-        })
+       return get('login/'+username+'/'+password+'/'+type)
     },
-    addHall:function(hall,username,password){
+    setHall:function(hall,username,password){
         return new Promise((resolve,reject)=>{
             fetch('http://localhost:3000/setHall/'+username+'/'+password,{
                 method: 'POST',
@@ -73,8 +53,42 @@ module.exports = {
                 reject(err);
                })
         })
-    }
+    },
+    addSeat: function(username,password,hallID,type,row,number){
+        return get('addSeat/'+username+'/'+password+"/"+hallID+"/"+type+"/"+row+"/"+number)
+    },
+    removeSeat: function(username,password,seatID,hallID){
+        return get("removeSeat/"+username+"/"+password+"/"+seatID+"/"+hallID)
+    },
+    addUser: function(username,password,type){
+        return get("addUser/"+username+"/"+password+"/"+type);
+    },
+    removeUser: function(username,password,type,userID){
+        return get("removeUser/"+username+"/"+password+"/"+type+"/"+userID)
+    },
+    getHall: function(hallID){
+        return get("getHall/"+hallID);
+    },
+    removeHall: function(username,password,hallid){
+        return get("removeHall/"+username+"/"+password+"/"+hallid)
+    },
+
+
+   
 
  }
-
+ function get(args){
+    console.log("fetch request with arguments: "+args)
+    return new Promise((resolve,reject)=>{
+        fetch('http://localhost:3000/'+args).then((response)=>{
+            return response.json();
+           }).then((data)=>{
+            console.log("json received")
+           resolve(data);
+           }).catch((err)=>{
+            console.log("some error happened")
+            reject(err);
+           })
+    })
+}
 

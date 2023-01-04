@@ -1,8 +1,9 @@
 
 const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
-/*
+
 //sample implementation for getting a cinema
+/*
 Client.getCinema().then((data)=>{
    let obj=JSON.parse(data)
     console.log(obj)
@@ -19,10 +20,37 @@ Client.login("Bodo","BodoPasswort","Manager").then((response)=>{
 Client.login("Bodo","asd","Manager").then((response)=>{
     console.log("logged in, printing repsonse:")
     console.log(response);
+})*/
+Client.addUser("Leona","kekse","Manager").then((res)=>{
+console.log(res)
+        let userID=res;
+    Client.login("Leona","kekse","Manager").then((res)=>{
+        console.log(res)
+        Client.getCinema().then((res)=>{
+           
+            Client.addSeat("Leona","kekse",0,"Normal",3,5).then((res)=>{
+                console.log(res)
+                Client.removeSeat("Leona","kekse",res,0).then((res)=>{
+                    console.log(res)
+                    Client.removeHall("Leona","kekse","0").then((res)=>{
+                        console.log(res)
+                        Client.removeUser("Leona","kekse","Manager",userID).then((res)=>{
+                            console.log(res)
+                        })
+                    })
+                })
+                
+            })
+        })
+    })
+}).catch((err)=>{
+    console.log(err.message)
 })
 
-*/
-let hall=new Def.Hall(25,"Normal","3D");
-Client.addHall(hall,"Bodo","BodoPasswort");
+
+
+
+
+
 
 

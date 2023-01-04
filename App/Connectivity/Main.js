@@ -2,8 +2,8 @@
 const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
 
-//sample implementation for getting a cinema
-/*
+//sample implementations
+
 Client.getCinema().then((data)=>{
    let obj=JSON.parse(data)
     console.log(obj)
@@ -20,7 +20,7 @@ Client.login("Bodo","BodoPasswort","Manager").then((response)=>{
 Client.login("Bodo","asd","Manager").then((response)=>{
     console.log("logged in, printing repsonse:")
     console.log(response);
-})*/
+})
 Client.addUser("Leona","kekse","Manager").then((res)=>{
 console.log(res)
         let userID=res;

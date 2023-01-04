@@ -34,7 +34,7 @@ app.get('/login/:username/:password/:type',function(req,res){
     }
     res.send(JSON.stringify("login successfull"));
 })
-
+//todo: ensure correct hallID
 app.post('/setHall/:username/:password',function(req,res){
     console.log("postrequest sethall")
     req.body.

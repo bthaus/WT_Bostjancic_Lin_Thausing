@@ -2,6 +2,7 @@ const JsonHandler=require('./JsonHandler');
 
 JsonHandler.initDefault();
 
+
 let date=new Date("July 4 1776 12:30");
 console.log(date)
 date=JSON.stringify(date)
@@ -34,9 +35,28 @@ try {
 }
 try {
     console.log("adding seat")
+    
     JsonHandler.addSeat(1,"Normal",3,5);
-    //todo: check if seat is actually in the jsonfile
-    let cinema=JsonHandler.getCinema();
+    console.log("error message incoming")
+    JsonHandler.addSeat(1,"Normal",3,5)
+} catch (error) {
+    console.log(error.message)
+}
+try {
+  
+    JsonHandler.removeSeat(0,5);
+    JsonHandler.removeSeat(0,5);
+} catch (error) {
+    console.log(error.message)
+}
+try {
+    JsonHandler.adduser("Bodo","BodoPassword","Manager")
+} catch (error) {
+    console.log(error.message)
+}
+try {
+    JsonHandler.adduser("John","johnpw","Customer")
+    JsonHandler.adduser("John","johnpw","Customer")
 } catch (error) {
     console.log(error.message)
 }

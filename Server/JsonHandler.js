@@ -52,7 +52,7 @@ module.exports = {
         //          number= int of "collumn"
         //          type= string of seattype
         constructor(row,number,type){
-            this.ID=seatID;
+            this.ID=seatID++;
             this.row=row;
             this.number=number;
             this.type=type;
@@ -80,7 +80,7 @@ module.exports = {
         //          type= string, restricted to manager and customer, as specified above
         
         constructor(username, password,type){
-            this.ID=userID;
+            this.ID=userID++;
             this.username=username;
             this.password=password;
             this.type=type;
@@ -90,7 +90,7 @@ module.exports = {
         //fields: obvious
         //          reviews= array of Strings
         constructor(name, description, duration, minimumAge){
-            this.ID=movieID;
+            this.ID=movieID++;
             const reviews=new Array(1);
             reviews.push("Die Hard is a classic action film that combines high-stakes tension, expertly choreographed action scenes, and a healthy dose of humor, making it a must-see for any fan of the genre.")
             this.reviews=reviews;
@@ -148,6 +148,9 @@ module.exports = {
     addSeat: function(hallID,type,row,seatID){
        addSeat(new module.exports.Seat(row,seatID,type),hallID);
     },
+    removeSeat: function(hallID,seatID){
+        removeSeat(hallID,seatID);
+    },
     getCinema:function(){
        return readFileByName("Cinema");
     },
@@ -161,16 +164,8 @@ module.exports = {
         return containsUserimpl(username,password,type);
     },
     adduser: function(username,password,type){
-        let user=new module.exports.User(username,password,type)
+       addUser(new module.exports.User(username,password,type)) 
        
-        if(containsUserimpl(user)==undefined){
-            console.log("user added");
-            addUser(user);
-            return;
-        }
-        console.log("user already in the system")
-        
-         
     },
     addPresentation: function(movie,){
         
@@ -298,7 +293,6 @@ if(checker){
 //manager
 function addSeat(seat,hallid){
 let hall=getHall(hallid);
-console.log(hallid)
 if(hall==undefined){
     throw new Error("No such hall found");
 }
@@ -310,20 +304,50 @@ hall.seats.forEach(element => {
 hall.seats.push(seat);
 setHall(hall);
 console.log("seat added");
-//check if seat is already in the hall
+
 }
 //manager
-function removeSeat(seat,hallid){
-//check if seat exists
+function removeSeat(hallID,seatID){
+let hall=getHall(hallID);
+console.log(hall.seats)
+let index=-1;
+let counter=0;
+hall.seats.forEach(element => {
+    if(element.ID==seatID){
+       index=counter;
+    }
+    counter++;
+});
+if(index!=-1){
+    hall.seats.splice(index,index)
+    setHall(hall);
+    console.log("seat removed")
+}else{
+    throw new Error("seat not found");
+}
+
 }
 //manager
 function setCinemaImpl(cinemastring){
-
+writeFile(cinemastring,"Cinema")
+console.log("Cinema Updated")
 }
 
 //all
 function addUser(user){
-//check if user exists
+    console.log("adding user"+user.username)
+let users=JSON.parse(readFileByName("Users"));
+if(users==undefined)throw new Error("some error reading users")
+let checker=false;
+users.userlist.forEach(element => {
+    if(element.username===user.username&&element.type===user.type){
+        checker=true;
+    }
+});
+if(checker)throw new Error("username and type combination already used");
+users.userlist.push(user);
+writeFile(JSON.stringify(users),"Users");
+console.log("users updated")
 }
 //all
 function removeUser(userID){

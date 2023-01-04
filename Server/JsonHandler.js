@@ -183,6 +183,17 @@ module.exports = {
             return true;
         }
         throw new Error("unexpected Error");
+    },
+    getHall: function(hallID){
+        return getHall(hallID);
+    },
+    setHall: function(hallJSONString){
+        try {
+            setHall(JSON.parse(hallJSONString))
+        } catch (error) {
+            throw new Error("some Error parsing the JSON-String");
+        }
+        
     }
 
 
@@ -286,6 +297,19 @@ if(checker){
 
 //manager
 function addSeat(seat,hallid){
+let hall=getHall(hallid);
+console.log(hallid)
+if(hall==undefined){
+    throw new Error("No such hall found");
+}
+hall.seats.forEach(element => {
+    if(element.row==seat.row&&element.number==seat.number){
+        throw new Error("There is already a seat in this spot");
+    }
+});
+hall.seats.push(seat);
+setHall(hall);
+console.log("seat added");
 //check if seat is already in the hall
 }
 //manager
@@ -307,7 +331,38 @@ function removeUser(userID){
 }
 //manager
 function setHall(hall){
-
+let cinema=JSON.parse(readFileByName("Cinema"));
+let index=-1;
+let counter=0;
+cinema.halls.forEach(element => {
+    if(element.hallID==hall.hallID){
+        index=counter;
+    }
+    counter++;
+});
+if(index!=-1){
+    console.log("found a hall with given ID. Overwriting...")
+    cinema.halls[index]=hall;
+}else{
+    cinema.halls.push(hall);
+}
+writeFile(JSON.stringify(cinema),"Cinema");
+console.log("hall set.")
+}
+function getHall(hallID){
+    let js=readFileByName("Cinema");
+    let cinema=JSON.parse(js);
+    let halls=cinema.halls;
+    let ret;
+    halls.forEach(hall => {
+        if(hall.ID==hallID){
+            ret=hall;
+        }
+    });
+    if(ret==undefined){
+        throw new Error("no hall with given ID found")
+    }
+    return ret;
 }
 //manager
 function removeHall(hallID){

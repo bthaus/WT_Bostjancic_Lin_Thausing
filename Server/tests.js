@@ -24,3 +24,19 @@ try {
 } catch (error) {
     console.log(error.message)
 }
+try {
+   let hall= JsonHandler.getHall(1);
+   console.log("hall found!"+hall);
+   
+   JsonHandler.getHall(-1);
+} catch (error) {
+    console.log(error.message)
+}
+try {
+    console.log("adding seat")
+    JsonHandler.addSeat(1,"Normal",3,5);
+    //todo: check if seat is actually in the jsonfile
+    let cinema=JsonHandler.getCinema();
+} catch (error) {
+    console.log(error.message)
+}

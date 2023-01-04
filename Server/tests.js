@@ -2,7 +2,6 @@ const JsonHandler=require('./JsonHandler');
 
 JsonHandler.initDefault();
 
-
 let date=new Date("July 4 1776 12:30");
 console.log(date)
 date=JSON.stringify(date)
@@ -20,11 +19,15 @@ try {
 } catch (error) {
     console.log(error.message)
 }
+
+
 try {
     console.log(JsonHandler.login("asd","wrong passwort","Manager"))
 } catch (error) {
     console.log(error.message)
 }
+
+
 try {
    let hall= JsonHandler.getHall(1);
    console.log("hall found!"+hall);
@@ -33,15 +36,18 @@ try {
 } catch (error) {
     console.log(error.message)
 }
+
 try {
     console.log("adding seat")
     
     JsonHandler.addSeat(1,"Normal",3,5);
+   
     console.log("error message incoming")
     JsonHandler.addSeat(1,"Normal",3,5)
 } catch (error) {
     console.log(error.message)
 }
+
 try {
   
     JsonHandler.removeSeat(0,5);
@@ -57,6 +63,13 @@ try {
 try {
     JsonHandler.adduser("John","johnpw","Customer")
     JsonHandler.adduser("John","johnpw","Customer")
+} catch (error) {
+    console.log(error.message)
+}
+try {
+    JsonHandler.removeHall(0);
+    JsonHandler.removeHall(0);
+
 } catch (error) {
     console.log(error.message)
 }

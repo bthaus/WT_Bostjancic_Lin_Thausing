@@ -1,5 +1,6 @@
 const { timeStamp } = require('console');
 let fs = require('fs');
+const { getCinema } = require('../App/Connectivity/Client');
 
 
 
@@ -164,7 +165,7 @@ module.exports = {
         return containsUserimpl(username,password,type);
     },
     adduser: function(username,password,type){
-       addUser(new module.exports.User(username,password,type)) 
+      return addUser(new module.exports.User(username,password,type)) 
        
     },
     addPresentation: function(movie,){
@@ -182,14 +183,13 @@ module.exports = {
     getHall: function(hallID){
         return getHall(hallID);
     },
-    setHall: function(hallJSONString){
-        try {
-            setHall(JSON.parse(hallJSONString))
-        } catch (error) {
-            throw new Error("some Error parsing the JSON-String");
-        }
-        
-    }
+    //todo: talk about parameters
+    addHall: function(){
+
+    },
+    removeHall: function(hallID){
+        return removeHall(hallID);
+    }    
 
 
     
@@ -292,7 +292,9 @@ if(checker){
 
 //manager
 function addSeat(seat,hallid){
+    console.log("adding seat to hall "+hallid)
 let hall=getHall(hallid);
+console.log(hall.ID)
 if(hall==undefined){
     throw new Error("No such hall found");
 }
@@ -319,7 +321,7 @@ hall.seats.forEach(element => {
     counter++;
 });
 if(index!=-1){
-    hall.seats.splice(index,index)
+    hall.seats.splice(index,1)
     setHall(hall);
     console.log("seat removed")
 }else{
@@ -359,7 +361,7 @@ let cinema=JSON.parse(readFileByName("Cinema"));
 let index=-1;
 let counter=0;
 cinema.halls.forEach(element => {
-    if(element.hallID==hall.hallID){
+    if(element.ID==hall.ID){
         index=counter;
     }
     counter++;
@@ -383,6 +385,7 @@ function getHall(hallID){
             ret=hall;
         }
     });
+    console.log("searching for "+hallID+" found"+ret)
     if(ret==undefined){
         throw new Error("no hall with given ID found")
     }
@@ -390,6 +393,25 @@ function getHall(hallID){
 }
 //manager
 function removeHall(hallID){
+let cinema=JSON.parse(readFileByName("Cinema"));
+let index=-1;
+let counter=0;
+cinema.halls.forEach(hall => {
+    console.log("comparing "+hall.ID+" with "+hallID)
+    if(hall.ID==hallID){
+        index=counter;
+    }
+    counter++;
+});
+if(index==-1){
+    throw new Error("no hall with given ID found")
+}
+console.log("splicig at "+index+",removing")
+cinema.halls.splice(index,1);
+
+setCinemaImpl(JSON.stringify(cinema));
+console.log("hall "+hallID+" removed successfully")
+
 
 }
 //throws error

@@ -114,3 +114,10 @@ try {
 } catch (error) {
     console.log(error.message)
 }
+console.log(JsonHandler.getPresentation(2))
+try {
+    JsonHandler.getPresentation(-123)
+} catch (error) {
+    console.log(error.message)
+}
+

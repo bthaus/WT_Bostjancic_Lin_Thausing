@@ -93,6 +93,7 @@ module.exports = {
             this.username=username;
             this.password=password;
             this.type=type;
+            this.tickets=new Array(0);
         }
     },
     Movie:class Movie{
@@ -129,7 +130,7 @@ module.exports = {
             this.movie=movie;
             this.start=date;
             this.ID=presentationID++;
-            const tickets=[maxseats];
+            const tickets=[];
             this.tickets=tickets;
     
         }
@@ -220,6 +221,9 @@ module.exports = {
     },
     removePresentation: function(presentationID){
         return removePresentation(presentationID)
+    },
+    getPresentation: function (presentationID){
+        return getPresentation(presentationID);
     } 
 
 
@@ -277,20 +281,16 @@ let ima=new module.exports.Cinema(3,7,'normal');
 let hall=new module.exports.Hall(10,"luxury","atmos");
 hall.addSeat(new module.exports.Seat(1,0,"replacable"))
 ima.addHall(hall)   
-const schedule=new Array(0);
-console.log("+++++++++++++++++++++++++++")
-console.log(schedule.length)
-schedule.push(new module.exports.Presentation(new module.exports.Movie("die hard","dying hard",120,18)),new Date("July 4 1776 12:30"))
-console.log(schedule.length)
-schedule.push(new module.exports.Presentation(new module.exports.Movie("die hard2","hardly dying",120,18)),new Date("July 4 1776 14:30"))
-schedule.push(new module.exports.Presentation(new module.exports.Movie("die hard3","dye haar",120,18)),new Date("July 4 1776 16:30"))
-console.log(schedule.length)
+
+const allschedules=new Array(0);
 ima.halls.forEach(element => {
-    element.addPresentations(schedule)
+let pres=new module.exports.Presentation(new module.exports.Movie("die hard","dying hard",120,18),new Date("July 4 1776 12:30"))
+element.presentations.push(pres);
+allschedules.push(pres);
 });
 let data=JSON.stringify(ima);
 writeFile(data,"Cinema")
-writeFile(JSON.stringify(schedule),"Movies")
+writeFile(JSON.stringify(allschedules),"Movies")
 
 }
 function readFileByName(name){
@@ -364,6 +364,18 @@ if(index!=-1){
 }
 
 }
+function getSeat(seatID){
+    let cinema=JSON.parse(readFileByName("Cinema"))
+    let seat;
+    cinema.halls.forEach(element => {
+        element.seats.forEach(element => {
+            if(element.ID==seatID) seat=element;
+        });
+    });
+    if(seat==undefined)throw new Error("No seat with given ID found")
+
+    return seat;
+}
 //manager
 function setCinemaImpl(cinemastring){
 writeFile(cinemastring,"Cinema")
@@ -407,6 +419,19 @@ function removeUser(userID){
      writeFile(JSON.stringify(userlist),"Users");
      console.log("user deleted")
      return "user deleted";
+}
+function getUser(userID){
+    let userlist=JSON.parse(readFileByName("Users"));
+
+    let founduser;;
+     userlist.userlist.forEach(user => {
+        if(user.ID==userID){
+          founduser=user;
+        }
+     });
+     if(founduser==undefined)throw new Error("no user with given ID found")
+     return founduser;
+
 }
 //manager
 function setHall(hall){
@@ -594,10 +619,60 @@ function removePresentation(presentationID){
 
 
 }
+function getPresentation(presentationID){
+    let cinema=JSON.parse(readFileByName("Cinema"))
+    let halls=cinema.halls;
+    let presentation;
+    halls.forEach(hall => {
+        hall.presentations.forEach(element => {
+            if(element.ID==presentationID){
+                presentation=element;
+            }
+        });
+    });
+    if(presentation==undefined)throw new Error("no presetation with given ID found");
+    console.log("presentation found: "+presentation.movie.name+" on "+presentation.start);
+    return presentation;
+}
+function getHallByPresentationID(presentationID){
+    let halls=JSON.parse(readFileByName("Cinema")).halls;
+    let presentation;
+    halls.forEach(element => {
+        element.presentations.forEach(pres => {
+            if(pres.ID==presentationID){
+                presentation=pres;
+            }
+        });
+    });
+    if(pres==undefined)throw new Error("no hall with given rpesentationID found")
+    return presentation;
+}
 //throws error
 //customer
-function bookTicket(userID, movieID, date, hallID){
+function bookTicket(userID, presentationID,seatID){
+let presentation=getPresentation(presentationID);
+let seat=getSeat(seatID);
+presentation.tickets.forEach(ticket => {
+    if(ticket.seat.ID==seat.ID){
+        throw new Error("seat already taken")
+    }
+});
+let user=getUser(userID);
+let hall=getHallByPresentationID(presentationID);
+let ticket=new module.exports.Ticket(user,seat);
+ticket.movie=presentation.movie;
+ticket.date=presentation.date;
+ticket.hallID=hall.ID;
+ticket.code=getQRCode()
+presentation.tickets.push(ticket);
+user.tickets.push(ticket);
 
+console.log("Ticket booked: ");
+console.log(ticket)
+return ticket;
+}
+function getQRCode(){
+    return "this is a sample qr code. 010101010"
 }
 //customer
 function removeTicket(ticketID, date){

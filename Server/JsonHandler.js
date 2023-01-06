@@ -228,8 +228,11 @@ module.exports = {
     boockTicket: function (userID,presentationID,seatID){
         return bookTicket(userID,presentationID,seatID)
     },
-    removeTicket: function(ticketID){
-        return removeTicket(ticketID);
+    removeTicket: function(ticketID,userID){
+        return removeTicket(ticketID,userID);
+    },
+    getUserID: function(username,type){
+        return getUserID(username,type)
     }
 
 
@@ -307,6 +310,19 @@ function readFileByName(name) {
     });
 
 }
+function getUserID(username,type){
+    let users=JSON.parse(readFileByName("Users"))
+    let user;
+    console.log(users)
+    users.userlist.forEach(useri => {
+        if(useri.username===username&&useri.type===type){
+            user=useri;}
+    });
+    console.log(user)
+    if(user==undefined)throw new Error("no user found with given Username")
+
+    return user.ID;
+}
 //returns: undefined: no user found
 //returns true: user found, password correct
 //returns false: user found, password incorrect
@@ -315,7 +331,6 @@ function containsUserimpl(username, password, type) {
     let datauser;
     let data = readFileByName("Users")
     let list = JSON.parse(data);
-    console.log(list.userlist)
     list.userlist.forEach(element => {
         if (element.username === username && element.type === type) {
             checker = true;
@@ -659,6 +674,7 @@ function getHallByPresentationID(presentationID) {
 //throws error
 //customer
 function bookTicket(userID, presentationID, seatID) {
+    console.log("Booking ticket")
     let presentation = getPresentation(presentationID);
     let seat = getSeat(seatID);
 
@@ -668,6 +684,7 @@ function bookTicket(userID, presentationID, seatID) {
             throw new Error("seat already taken")
         }
     });
+    console.log("free seat requested")
     let user = getUser(userID);
     let hall = getHallByPresentationID(presentationID);
     let ticket = new module.exports.Ticket(user, seat);
@@ -711,7 +728,7 @@ function getTicketByID(ticketID){
 
 }
 //customer
-function removeTicket(ticketID, date) {
+function removeTicket(ticketID, userID) {
     let cinema=JSON.parse(readFileByName("Cinema"));
    
     let fhall;
@@ -724,6 +741,7 @@ function removeTicket(ticketID, date) {
             let counter=0;
             pres.tickets.forEach(ticket => {
                 if(ticket.ID==ticketID){
+                    if(ticket.user.ID!=userID) throw new Error("you cant remove tickets you dont own")
                     index=counter;
                     fhall=hall;
                     fpresentation=pres;

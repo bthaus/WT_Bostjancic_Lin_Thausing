@@ -158,13 +158,61 @@ app.get('/addMovie/:username/:password/:name/:duration/:minimumAge/:description'
         res.status(404).json(error.message);
     }
 })
+app.get('/addPresentation/:username/:password/:movieID/:date/:hallID',function(req,res){
+    console.log("add Presentation request from "+req.params.username)
+    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
+   
+    try {
+        let response=JsonHandler.addPresentation(req.params.movieID,req.params.date,req.params.hallID)
+        res.json(response);
+    } catch (error) {
+        res.status(404).json(error.message);
+    }
+})
+app.get('/removePresentation/:username/:password/:presentationID',function(req,res){
+    console.log("remove Presentation request from "+req.params.username)
+    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
+   
+    try {
+        let response=JsonHandler.removePresentation(req.params.presentationID)
+        res.json(response);
+    } catch (error) {
+        res.status(404).json(error.message);
+    }
+})
+app.get('/BookTicket/:username/:password/:presentationID/:seatID',function(req,res){
+    console.log("book ticket request from "+req.params.username)
+    if(checkLogin(req.params.username,req.params.password,"Customer",res)==undefined) return; 
+   
+    try { 
+        let userID=JsonHandler.getUserID(req.params.username,"Customer")
+        console.log("User found: "+ userID)
+        let response=JsonHandler.boockTicket(userID,req.params.presentationID,req.params.seatID)
+        res.json(response);
+    } catch (error) {
+        res.status(404).json(error.message);
+    }
+})
+app.get('/removeTicket/:username/:password/:TicketID',function(req,res){
+    console.log("remove ticket request from "+req.params.username)
+    if(checkLogin(req.params.username,req.params.password,"Customer",res)==undefined) return; 
+   
+    try { 
+        let userID=JsonHandler.getUserID(req.params.username,"Customer")
+        let response=JsonHandler.removeTicket(req.params.TicketID,userID);
+        res.json(response);
+    } catch (error) {
+        res.status(404).json(error.message);
+    }
+})
 
  
  
 
 function checkLogin(username,password,type,res){
     try {
-        return JsonHandler.login(username,password,type);
+       let ret= JsonHandler.login(username,password,type);
+       return ret
     } catch (error) {
         console.log(error.message)
         res.status(404).json(error.message);

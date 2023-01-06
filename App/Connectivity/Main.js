@@ -3,7 +3,7 @@ const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
 
 //sample implementations
-
+/*
 Client.getCinema().then((data)=>{
    let obj=JSON.parse(data)
     console.log(obj)
@@ -52,6 +52,38 @@ Client.addSeat("Martin","martinpw",0,0,0,0).then((data)=>{
 }).catch((err)=>{
     console.log(err)
 })
+*/
+Client.addMovie("Bodo","BodoPasswort","Der Herr der Ringe",180,12,"lotr").then((data)=>{
+    console.log("starting movie and ticket tests")
+    let movieID=data;
+    console.log(movieID)
+    Client.removeMovie(movieID,"Bodo","BodoPasswort").then((data)=>{
+        console.log(data)
+        Client.addMovie("Bodo","BodoPasswort","Der Herr der Ringe",180,12,"lotr").then((data)=>{
+            let movieID=data;
+            Client.addPresentation("Bodo","BodoPasswort",movieID,"today",1).then((data)=>{
+                console.log(data)
+                let presentationID=data;
+                Client.addSeat("Bodo","BodoPasswort",1,"Normal",1,5).then((data)=>{
+                    let seatID=data;
+                    console.log(seatID)
+                    Client.bookTicket("Martin","martinpw",presentationID,seatID).then((data)=>{
+                        console.log(data)
+                       console.log(data.code)
+                       Client.removeTicket("Martin","martinpw",data.ID).then((data)=>{
+                        console.log(data)
+                       })
+                    })
+                })
+            
+            })
+        })
+    })
+}).catch((err)=>{
+    console.log(err)
+})
+
+
 
 
 

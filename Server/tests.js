@@ -124,7 +124,6 @@ try {
 try {
     JsonHandler.boockTicket(1,1,10)
     JsonHandler.boockTicket(1,1,10)
-    
 } catch (error) {
     console.log(error.message)
     

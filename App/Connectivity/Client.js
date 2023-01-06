@@ -83,7 +83,20 @@ module.exports = {
     },
     addMovie: function(username,password,name,duration,minimumAge,description){
         return get("addMovie/"+username+"/"+password+"/"+name+"/"+duration+"/"+minimumAge+"/"+description)
+    },
+    addPresentation: function(username,password,movieID,date,hallID){
+        return get("addPresentation/"+username+'/'+password+'/'+movieID+'/'+date+'/'+hallID)
+    },
+    removePresentation: function(username,password,presentationID){
+        return get("removePresentation/"+username+'/'+password+'/'+presentationID);
+    },
+    bookTicket: function(username,password,presentationID,seatID){
+        return get("BookTicket/"+username+'/'+password+'/'+presentationID+'/'+seatID)
+    },
+    removeTicket: function(username,password,TicketID){
+        return get ("removeTicket/"+username+'/'+password+'/'+TicketID)
     }
+
 
 
    

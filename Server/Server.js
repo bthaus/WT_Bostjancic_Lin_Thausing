@@ -6,7 +6,7 @@ app.use(express.json())
 const JsonHandler=require('./JsonHandler');
 let fs = require('fs');
 let cors = require('cors');
-const { addSeat, removeSeat, adduser, removeUser, getHall, removeHall, getMovies } = require('./JsonHandler');
+const { addSeat, removeSeat, adduser, removeUser, getHall, removeHall, getMovies, removeMovie, getMovieByID, addMovie } = require('./JsonHandler');
 app.use(cors()); // allow all origins -> Access-Control-Allow-Origin: *
 app.use(express.static('public')); // host public folder
 JsonHandler.initDefault();
@@ -16,8 +16,7 @@ app.get('/getCinemaHall/:ID',function(req,res){
 let ID=req.params.ID;
 
 })
-//input=brauchts nicht
-//output: cinema klasse als json string
+
 app.get('/getCinema',function(req,res){
     console.log("cinema requested")
     res.json(JsonHandler.getCinema());
@@ -49,7 +48,7 @@ app.get('/addHall/:username/:password',function(req,res){
 })
 
 app.get('/addSeat/:username/:password/:hallID/:type/:row/:number',function(req,res){
-    checkLogin(req.params.username,req.params.password,"Manager",res)
+   if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
     console.log("seat add request from "+req.params.username)
    try {
     let response=addSeat(req.params.hallID,req.params.type,req.params.row,req.params.number)
@@ -62,7 +61,7 @@ app.get('/addSeat/:username/:password/:hallID/:type/:row/:number',function(req,r
 
 })
 app.get('/removeSeat/:username/:password/:seatID/:hallID',function(req,res){
-    checkLogin(req.params.username,req.params.password,"Manager",res)
+    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
     console.log("seat remove request from "+req.params.username)
  
     try {
@@ -85,7 +84,7 @@ app.get('/addUser/:username/:password/:type',function(req,res){
     }
 })
 app.get('/removeUser/:username/:password/:type/:userID',function(req,res){
-    checkLogin(req.params.username,req.params.password,"Manager",res)
+    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
     console.log("user remove request from "+req.params.username)
  
     try {
@@ -107,7 +106,7 @@ app.get('/removeUser/:username/:password/:type/:userID',function(req,res){
      }
  })
  app.get('/removeHall/:username/:password/:hallID',function(req,res){
-    checkLogin(req.params.username,req.params.password,"Manager",res)
+    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
     console.log("remove hall request from "+req.params.username)
  
     try {
@@ -128,20 +127,32 @@ app.get('/getMovies',function(req,res){
     }
 })
 app.get('/getMovieByID/:movieID',function(req,res){
-    console.log("get MoviebyID request  ")
- 
+    console.log("get MoviebyID request from ")
+    
     try {
-        let response=getMovies(req.params.movieID);
+        let response=getMovieByID(req.params.movieID);
         res.json(response);
     } catch (error) {
         res.status(404).json(error.message);
     }
 })
-app.get('/removeMovie/:movieID',function(req,res){
-    console.log("remove Movie request  ")
- 
+app.get('/removeMovie/:username/:password/:movieID',function(req,res){
+    console.log("remove Movie request from "+req.params.username)
+    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
+   
     try {
-        let response=getMovies(req.params.movieID);
+        let response=removeMovie(req.params.movieID);
+        res.json(response);
+    } catch (error) {
+        res.status(404).json(error.message);
+    }
+})
+app.get('/addMovie/:username/:password/:name/:duration/:minimumAge/:description',function(req,res){
+    console.log("remove Movie request from "+req.params.username)
+    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
+   
+    try {
+        let response=addMovie(req.params.name,req.params.duration,req.params.minimumAge,req.params.description);
         res.json(response);
     } catch (error) {
         res.status(404).json(error.message);
@@ -157,6 +168,7 @@ function checkLogin(username,password,type,res){
     } catch (error) {
         console.log(error.message)
         res.status(404).json(error.message);
+    
     }
 }
 

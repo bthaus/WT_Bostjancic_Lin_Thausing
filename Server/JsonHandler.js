@@ -22,8 +22,8 @@ module.exports = {
             this.ID=hallID++;
             this.numSeats=numSeats;
             const seats=new Array(numSeats);
-            const moviess=new Array(10)
-            this.schedule=moviess
+            const moviess=new Array(0)
+            this.presentations=moviess
             let rows=numSeats/10;
             let counter=0;
             this.features=features;
@@ -42,10 +42,18 @@ module.exports = {
         }
       
         addPresentations(presentations){
-            this.schedule=presentations;
+            this.presentations=presentations;
         }
         addPresentation(Presentation){
-            this.schedule.push(Presentation);
+            this.presentations.push(Presentation);
+        }
+        checkCollision(movie,date){
+            this.presentations.forEach(element => {
+                if(element.date===date){
+                    throw new Error("Theres already a booked movie at that time")
+                }
+            });
+            return false;
         }
     },
     Seat:class Seat{
@@ -120,7 +128,7 @@ module.exports = {
             
             this.movie=movie;
             this.start=date;
-            
+            this.ID=presentationID++;
             const tickets=[maxseats];
             this.tickets=tickets;
     
@@ -206,6 +214,12 @@ module.exports = {
     },
     addMovie: function(name,duration,minimumAge,description){
         return addMovie(new module.exports.Movie(name,description,duration,minimumAge));
+    },
+    addPresentation: function(movieID,date,hallID){
+        return addPresentation(movieID,date,hallID)
+    },
+    removePresentation: function(presentationID){
+        return removePresentation(presentationID)
     } 
 
 
@@ -229,7 +243,7 @@ let hallID=0;
 let seatID=0;
 let userID=0;
 let movieID=0;
-
+let presentationID=0;
 
 
 
@@ -539,6 +553,45 @@ function removeMovie(movieID){
     
 }
 function addPresentation(movieID,date,hallID){
+let hall=getHall(hallID);
+let movie=getMovieByID(movieID).movie;
+
+hall.presentations.forEach(element => {
+   //todo: fix date stuff
+    if(new Date(element.start)===date){
+        throw new Error("Theres already a booked movie at that time")
+    }
+});
+
+let pres=new module.exports.Presentation(movie,date);
+hall.presentations.push(pres)
+setHall(hall);
+console.log("Presentation added to hall "+hallID+" with movie "+movie.name+" at time "+date)
+return pres.ID;
+}
+function removePresentation(presentationID){
+    let cinema=JSON.parse(readFileByName("Cinema"));
+    let hallindex=-1;
+    let presIndex=-1;
+    let hallcounter=0;
+    let prescounter=0;
+    cinema.halls.forEach(hall => {
+        hall.presentations.forEach(pres => {
+            if(pres.ID==presentationID){
+                hallindex=hallcounter;
+                presIndex=prescounter;
+            }
+            prescounter++;
+        });
+        hallcounter++;
+    });
+
+    if(hallindex==-1||presIndex==-1) throw new Error("no presentation with given ID found");
+    cinema.halls[hallindex].presentations.splice(presIndex,1);
+    setCinemaImpl(JSON.stringify(cinema));
+    console.log("presentation successfully removed");
+    return "presentation successfully removed"
+
 
 }
 //throws error

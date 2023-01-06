@@ -105,3 +105,12 @@ try {
 } catch (error) {
     console.log(error.message)
 }
+try {
+    console.log(JsonHandler.addPresentation(0,new Date("July 4 2022 16:30"),1))
+    console.log(JsonHandler.addPresentation(0,new Date("July 4 2022 16:30"),1))
+    console.log(JsonHandler.removePresentation(4))
+    console.log(JsonHandler.removePresentation(5))
+    console.log(JsonHandler.removePresentation(4))
+} catch (error) {
+    console.log(error.message)
+}

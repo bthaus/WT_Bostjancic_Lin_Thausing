@@ -72,6 +72,18 @@ module.exports = {
     removeHall: function(username,password,hallid){
         return get("removeHall/"+username+"/"+password+"/"+hallid)
     },
+    getMovies:function(){
+        return get("getMovies");
+    },
+    getMovieByID: function(movieID){
+        return get("getMovieByID/"+movieID);
+    },
+    removeMovie: function(movieID,username,password){
+        return get("removeMovie/"+username+"/"+password+"/"+movieID)
+    },
+    addMovie: function(username,password,name,duration,minimumAge,description){
+        return get("addMovie/"+username+"/"+password+"/"+name+"/"+duration+"/"+minimumAge+"/"+description)
+    }
 
 
    

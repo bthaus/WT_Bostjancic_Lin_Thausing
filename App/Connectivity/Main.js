@@ -46,6 +46,12 @@ console.log(res)
 }).catch((err)=>{
     console.log(err.message)
 })
+console.log("checking false login")
+Client.addSeat("Martin","martinpw",0,0,0,0).then((data)=>{
+    console.log(data)
+}).catch((err)=>{
+    console.log(err)
+})
 
 
 

@@ -92,7 +92,7 @@ module.exports = {
         //          reviews= array of Strings
         constructor(name, description, duration, minimumAge){
             this.ID=movieID++;
-            const reviews=new Array(1);
+            const reviews=new Array(0);
             reviews.push("Die Hard is a classic action film that combines high-stakes tension, expertly choreographed action scenes, and a healthy dose of humor, making it a must-see for any fan of the genre.")
             this.reviews=reviews;
             this.name=name;
@@ -111,11 +111,13 @@ module.exports = {
             this.seat=seat;
         }
     },
+    //todo: fix array problem with date (date is saved as extra entry into the schedule array upon initialisation, despite being in the presentation class)
    Presentation: class Presentation{
         //movie= Movie, date=Date  caution: getting a date out of a json via JSON.parse doesnt return a Date
         // class, but a string. this string can be used in the constructor of new Date(JSON.parse(JSONdatestring))
         
         constructor(movie,date){
+            
             this.movie=movie;
             this.start=date;
             
@@ -192,7 +194,19 @@ module.exports = {
     },
     removeHall: function(hallID){
         return removeHall(hallID);
-    }    
+    },
+    getMovies: function(){
+        return getMovies();
+    },
+    getMovieByID: function(movieID){
+        return getMovieByID(movieID);
+    },
+    removeMovie: function(movieID){
+        return removeMovie(movieID);
+    },
+    addMovie: function(name,duration,minimumAge,description){
+        return addMovie(new module.exports.Movie(name,description,duration,minimumAge));
+    } 
 
 
     
@@ -249,16 +263,20 @@ let ima=new module.exports.Cinema(3,7,'normal');
 let hall=new module.exports.Hall(10,"luxury","atmos");
 hall.addSeat(new module.exports.Seat(1,0,"replacable"))
 ima.addHall(hall)   
-const schedule=new Array(3);
+const schedule=new Array(0);
+console.log("+++++++++++++++++++++++++++")
+console.log(schedule.length)
 schedule.push(new module.exports.Presentation(new module.exports.Movie("die hard","dying hard",120,18)),new Date("July 4 1776 12:30"))
+console.log(schedule.length)
 schedule.push(new module.exports.Presentation(new module.exports.Movie("die hard2","hardly dying",120,18)),new Date("July 4 1776 14:30"))
 schedule.push(new module.exports.Presentation(new module.exports.Movie("die hard3","dye haar",120,18)),new Date("July 4 1776 16:30"))
-
+console.log(schedule.length)
 ima.halls.forEach(element => {
     element.addPresentations(schedule)
 });
 let data=JSON.stringify(ima);
 writeFile(data,"Cinema")
+writeFile(JSON.stringify(schedule),"Movies")
 
 }
 function readFileByName(name){
@@ -438,9 +456,94 @@ console.log("hall "+hallID+" removed successfully")
 return "hall removed"
 
 }
+function addMovie(movie){
+    let movies=JSON.parse(readFileByName("Movies"));
+    let checker=false;
+    movies.forEach(element => {
+        let id;
+        let name;
+        try {
+            id=element.movie.ID;
+            name=element.movie.name;
+        } catch (error) {
+            
+        }
+        if(id==movie.ID){
+            throw new Error("Movie with such ID already exists")
+        }
+        if(name===movie.name){
+            throw new Error("Movie with such name already exists")
+        }
+    
+    });
+    let pres=new module.exports.Presentation(movie,new Date(Date()))
+    movies.push(pres);
+    writeFile(JSON.stringify(movies),"Movies");
+    console.log(movie.name+" added to library");
+    return movie.ID;
+}
+function getMovies(){
+    return JSON.parse(readFileByName("Movies"));
+}
+function getMovieByID(movieID){
+    let movies=JSON.parse(readFileByName("Movies"));
+   
+    let movie;
+    
+    movies.forEach(element => {
+
+        let temp;
+        try {
+            temp=element.movie.ID;  
+        } catch (error) {
+            
+        }
+       
+        if(temp==movieID){
+            movie=element;
+        }
+       
+        
+    });
+    if(movie==undefined)throw new Error("no such movie found")
+    console.log("Movie found: "+movie.movie.name)
+    return movie;
+}
+function removeMovie(movieID){
+    let presentations=JSON.parse(readFileByName("Movies"));
+    let movie;
+    let index=-1;
+    let counter=0;
+
+    presentations.forEach(pres => {
+        let temp;
+        try {
+            temp=pres.movie.ID;
+        } catch (error) {
+            
+        }
+        
+        if(temp==movieID){
+            movie=pres;
+            index=counter;
+        }
+        counter++;
+    });
+    if(movie==undefined)throw new Error("no such movie found")
+    if(index==-1) throw new Error("no such movie found again?=")
+    console.log("Movie removed: "+movie.movie.name)
+    presentations.splice(index,1);
+    writeFile(JSON.stringify(presentations),"Movies");
+    console.log("movies updated")
+    return true;
+    
+}
+function addPresentation(movieID,date,hallID){
+
+}
 //throws error
 //customer
-function bookTicket(user, movie, date, hall){
+function bookTicket(userID, movieID, date, hallID){
 
 }
 //customer

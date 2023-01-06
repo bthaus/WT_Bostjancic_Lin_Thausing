@@ -78,3 +78,30 @@ try {
 } catch (error) {
     console.log(error.message)
 }
+try {
+   console.log(JsonHandler.getMovies())
+    console.log(JsonHandler.getMovieByID(0))
+    console.log(JsonHandler.getMovieByID(5))
+} catch (error) {
+    console.log(error.message)
+}
+try {
+    console.log(JsonHandler.removeMovie(1));
+    console.log(JsonHandler.removeMovie(1))
+} catch (error) {
+    console.log(error.message)
+}
+try {
+    console.log(JsonHandler.addMovie("kreis",120,12,"ist rund"))
+    console.log(JsonHandler.addMovie("kreis",120,12,"ist rund"))
+
+} catch (error) {
+    console.log(error.message)
+}
+try {
+    console.log(JsonHandler.removeMovie(3));
+    console.log(JsonHandler.removeMovie(3))
+  
+} catch (error) {
+    console.log(error.message)
+}

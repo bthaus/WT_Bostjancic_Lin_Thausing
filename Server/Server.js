@@ -1,10 +1,12 @@
+//the server has to be run from the main directory WT_Bostjancic_Lin_Thausing
+
 let express = require('express');
 const app = express();
 app.use(express.json())
 const JsonHandler=require('./JsonHandler');
 let fs = require('fs');
 let cors = require('cors');
-const { addSeat, removeSeat, adduser, removeUser, getHall, removeHall } = require('./JsonHandler');
+const { addSeat, removeSeat, adduser, removeUser, getHall, removeHall, getMovies } = require('./JsonHandler');
 app.use(cors()); // allow all origins -> Access-Control-Allow-Origin: *
 app.use(express.static('public')); // host public folder
 JsonHandler.initDefault();
@@ -110,6 +112,36 @@ app.get('/removeUser/:username/:password/:type/:userID',function(req,res){
  
     try {
         let response=removeHall(req.params.hallID);
+        res.json(response);
+    } catch (error) {
+        res.status(404).json(error.message);
+    }
+})
+app.get('/getMovies',function(req,res){
+    console.log("get Movies request  ")
+ 
+    try {
+        let response=getMovies();
+        res.json(response);
+    } catch (error) {
+        res.status(404).json(error.message);
+    }
+})
+app.get('/getMovieByID/:movieID',function(req,res){
+    console.log("get MoviebyID request  ")
+ 
+    try {
+        let response=getMovies(req.params.movieID);
+        res.json(response);
+    } catch (error) {
+        res.status(404).json(error.message);
+    }
+})
+app.get('/removeMovie/:movieID',function(req,res){
+    console.log("remove Movie request  ")
+ 
+    try {
+        let response=getMovies(req.params.movieID);
         res.json(response);
     } catch (error) {
         res.status(404).json(error.message);

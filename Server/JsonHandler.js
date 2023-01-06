@@ -224,6 +224,12 @@ module.exports = {
     },
     getPresentation: function (presentationID) {
         return getPresentation(presentationID);
+    },
+    boockTicket: function (userID,presentationID,seatID){
+        return bookTicket(userID,presentationID,seatID)
+    },
+    removeTicket: function(ticketID){
+        return removeTicket(ticketID);
     }
 
 
@@ -636,24 +642,29 @@ function getPresentation(presentationID) {
 }
 function getHallByPresentationID(presentationID) {
     let halls = JSON.parse(readFileByName("Cinema")).halls;
-    let presentation;
-    halls.forEach(element => {
-        element.presentations.forEach(pres => {
+ 
+    let foundhall;
+    halls.forEach(hall => {
+        hall.presentations.forEach(pres => {
             if (pres.ID == presentationID) {
-                presentation = pres;
+                console.log("hall found!")
+                
+                 foundhall= hall;
             }
         });
     });
-    if (pres == undefined) throw new Error("no hall with given rpesentationID found")
-    return presentation;
+    if (foundhall == undefined) throw new Error("no hall with given rpesentationID found")
+    return foundhall;
 }
 //throws error
 //customer
 function bookTicket(userID, presentationID, seatID) {
     let presentation = getPresentation(presentationID);
     let seat = getSeat(seatID);
+
     presentation.tickets.forEach(ticket => {
         if (ticket.seat.ID == seat.ID) {
+            
             throw new Error("seat already taken")
         }
     });
@@ -665,18 +676,68 @@ function bookTicket(userID, presentationID, seatID) {
     ticket.hallID = hall.ID;
     ticket.code = getQRCode()
     presentation.tickets.push(ticket);
-    user.tickets.push(ticket);
-
+    hall.presentations.forEach(element => {
+        if(element.ID==presentationID){
+            element.tickets.push(ticket);
+        }
+    });
+    console.log(hall.presentations)
+    setHall(hall);
+    
     console.log("Ticket booked: ");
-    console.log(ticket)
     return ticket;
 }
 function getQRCode() {
     return "this is a sample qr code. 010101010"
 }
+function getTicketByID(ticketID){
+    let cinema=JSON.parse(readFileByName("Cinema"));
+    let fhall;
+    let fpresentation;
+    let fticket;
+    cinema.halls.forEach(hall => {
+        hall.presentation.forEach(pres => {
+            pres.tickets.forEach(ticket => {
+                if(ticket.ID==ticketID){
+                    fhall=hall;
+                    fpresentation=pres;
+                    fticket=ticket;
+                }
+            });
+        });
+    });
+    if(ticket==undefined)throw new Error("no suck ticket found")
+    return ticket;
+
+}
 //customer
 function removeTicket(ticketID, date) {
-    //check date
+    let cinema=JSON.parse(readFileByName("Cinema"));
+   
+    let fhall;
+    let fpresentation;
+    let fticket;
+    
+    cinema.halls.forEach(hall => {
+        hall.presentations.forEach(pres => {
+            let index=-1;
+            let counter=0;
+            pres.tickets.forEach(ticket => {
+                if(ticket.ID==ticketID){
+                    index=counter;
+                    fhall=hall;
+                    fpresentation=pres;
+                    fticket=ticket;
+                }
+                counter++;
+            });
+           if(index!=-1) pres.tickets.splice(index,1)
+        });
+    });
+    if(fticket==undefined)throw new Error("no such ticket found")
+    setHall(fhall);
+    console.log("ticket removed")
+    return "ticket removed"
 }
 
 //customer

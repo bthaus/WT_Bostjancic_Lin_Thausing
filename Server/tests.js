@@ -121,3 +121,19 @@ try {
     console.log(error.message)
 }
 
+try {
+    JsonHandler.boockTicket(1,1,10)
+    JsonHandler.boockTicket(1,1,10)
+    
+} catch (error) {
+    console.log(error.message)
+    
+}
+try {
+    JsonHandler.removeTicket(0)
+    JsonHandler.removeTicket(0)
+} catch (error) {
+    console.log(error.message)
+}
+
+

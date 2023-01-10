@@ -1,6 +1,9 @@
 
+const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
-//sample implementation for getting a cinema
+
+//sample implementations
+/*
 Client.getCinema().then((data)=>{
    let obj=JSON.parse(data)
     console.log(obj)
@@ -18,4 +21,74 @@ Client.login("Bodo","asd","Manager").then((response)=>{
     console.log("logged in, printing repsonse:")
     console.log(response);
 })
+Client.addUser("Leona","kekse","Manager").then((res)=>{
+console.log(res)
+        let userID=res;
+    Client.login("Leona","kekse","Manager").then((res)=>{
+        console.log(res)
+        Client.getCinema().then((res)=>{
+           
+            Client.addSeat("Leona","kekse",0,"Normal",3,5).then((res)=>{
+                console.log(res)
+                Client.removeSeat("Leona","kekse",res,0).then((res)=>{
+                    console.log(res)
+                    Client.removeHall("Leona","kekse","0").then((res)=>{
+                        console.log(res)
+                        Client.removeUser("Leona","kekse","Manager",userID).then((res)=>{
+                            console.log(res)
+                        })
+                    })
+                })
+                
+            })
+        })
+    })
+}).catch((err)=>{
+    console.log(err.message)
+})
+console.log("checking false login")
+Client.addSeat("Martin","martinpw",0,0,0,0).then((data)=>{
+    console.log(data)
+}).catch((err)=>{
+    console.log(err)
+})
+*/
+Client.addMovie("Bodo","BodoPasswort","Der Herr der Ringe",180,12,"lotr").then((data)=>{
+    console.log("starting movie and ticket tests")
+    let movieID=data;
+    console.log(movieID)
+    Client.removeMovie(movieID,"Bodo","BodoPasswort").then((data)=>{
+        console.log(data)
+        Client.addMovie("Bodo","BodoPasswort","Der Herr der Ringe",180,12,"lotr").then((data)=>{
+            let movieID=data;
+            Client.addPresentation("Bodo","BodoPasswort",movieID,"today",1).then((data)=>{
+                console.log(data)
+                let presentationID=data;
+                Client.addSeat("Bodo","BodoPasswort",1,"Normal",1,5).then((data)=>{
+                    let seatID=data;
+                    console.log(seatID)
+                    Client.bookTicket("Martin","martinpw",presentationID,seatID).then((data)=>{
+                        console.log(data)
+                       console.log(data.code)
+                       Client.removeTicket("Martin","martinpw",data.ID).then((data)=>{
+                        console.log(data)
+                       })
+                    })
+                })
+            
+            })
+        })
+    })
+}).catch((err)=>{
+    console.log(err)
+})
+
+
+
+
+
+
+
+
+
 

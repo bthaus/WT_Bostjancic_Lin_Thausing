@@ -264,7 +264,7 @@ let presentationID = 0;
 
 function writeFile(data, filename) {
     //WT_Bostjancic_Lin_Thausing/Server/
-    fs.writeFileSync('./Server/JSONfiles/' + filename + '.json', data, (err) => {
+    fs.writeFileSync('./JSONfiles/' + filename + '.json', data, (err) => { // deleted path
         if (err) {
             return err;
         }
@@ -304,7 +304,7 @@ function initDefaultData() {
 }
 function readFileByName(name) {
     console.log("reading " + name)
-    return fs.readFileSync('./Server/JSONfiles/' + name + '.json', 'utf8', (err, data) => {
+    return fs.readFileSync('./JSONfiles/' + name + '.json', 'utf8', (err, data) => { //deleted path
         if (err) return err;
         console.log("successfully read")
     });

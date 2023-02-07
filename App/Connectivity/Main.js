@@ -1,9 +1,22 @@
 
 const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
+Client.login("Bodo","BodoPasswort","Manager").then((Data)=>{
+   console.log("sending second req")
+    fetch('http://localhost:3000/testToken/',{
+        headers:{
+            token:Data
+        }
+    }).then((data)=>{
+        console.log(data)
+        return data.json()
+    }).then((data)=>{
+        console.log(data)
+    });
+})
 
 //sample implementations
-/*
+
 Client.getCinema().then((data)=>{
    let obj=JSON.parse(data)
     console.log(obj)
@@ -52,7 +65,7 @@ Client.addSeat("Martin","martinpw",0,0,0,0).then((data)=>{
 }).catch((err)=>{
     console.log(err)
 })
-*/
+
 Client.addMovie("Bodo","BodoPasswort","Der Herr der Ringe",180,12,"lotr").then((data)=>{
     console.log("starting movie and ticket tests")
     let movieID=data;

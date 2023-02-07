@@ -10,13 +10,44 @@ const { addSeat, removeSeat, adduser, removeUser, getHall, removeHall, getMovies
 app.use(cors()); // allow all origins -> Access-Control-Allow-Origin: *
 app.use(express.static('public')); // host public folder
 JsonHandler.initDefault();
+const jwt=require("jsonwebtoken")
+const dotenv= require("dotenv")
+dotenv.config();
+process.env.TOKEN_SECRET;
+const expiryTime='1800s'
+//not sure about that
+TOKEN_SECRET=require('crypto').randomBytes(64).toString('hex');
+
+function generateAccessToken(username, role){
+    return jwt.sign({username:username, role:role},TOKEN_SECRET,{expiresIn : '1h'});
+}
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+
+  if (token == null) return res.sendStatus(401)
+
+
+}
 
 
 app.get('/getCinemaHall/:ID',function(req,res){
 let ID=req.params.ID;
 
 })
+app.get('/testToken/',function(req,res){
+    
+jwt.verify(req.headers.token,TOKEN_SECRET,(err, re)=>{
+console.log(err)
+if(err!=null){
+return}
 
+console.log(re)
+res.json("authentication successfull");
+})
+
+})
 app.get('/getCinema',function(req,res){
     console.log("cinema requested")
     res.json(JsonHandler.getCinema());
@@ -25,6 +56,10 @@ app.get('/getCinema',function(req,res){
 //input: username, passwort und type als string
 //output: JSON User/error 404 sorry cant find that
 app.get('/login/:username/:password/:type',function(req,res){
+    console.log("Logging in")
+
+    const token=generateAccessToken(req.params.username,req.params.type);
+    token.role=req.params.type;
     console.log("login request from "+req.params.username+" with pw "+req.params.password)
     try {
         let result=JsonHandler.login(req.params.username,req.params.password,req.params.type);
@@ -34,7 +69,7 @@ app.get('/login/:username/:password/:type',function(req,res){
         res.json(error.message);
         return;
     }
-    res.send(JSON.stringify("login successfull"));
+    res.json(token);
 })
 //todo: ensure correct hallID
 app.post('/setHall/:username/:password',function(req,res){

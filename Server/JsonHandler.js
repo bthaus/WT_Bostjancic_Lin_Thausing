@@ -636,7 +636,7 @@ function removePresentation(presentationID) {
     cinema.halls[hallindex].presentations.splice(presIndex, 1);
     setCinemaImpl(JSON.stringify(cinema));
     console.log("presentation successfully removed");
-    return "presentation successfully removed"
+    return true
 
 
 }

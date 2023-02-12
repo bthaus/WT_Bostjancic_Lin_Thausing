@@ -1,6 +1,18 @@
 
 const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
+Client.addSeat("Bodo","BodoPasswort",0,"normal",0,0).then((data)=>{
+    console.log(data)
+}).catch((data)=>{
+    console.log(data)
+})
+Client.login("Bodo","BodoPasswort","Manager").then((data)=>{
+    console.log(data);
+    Client.addSeat("Bodo","BodoPasswort",0,"normal",0,0).then((data)=>{
+        console.log(data)
+    })
+})
+/*
 Client.login("Bodo","BodoPasswort","Manager").then((Data)=>{
    console.log("sending second req")
     fetch('http://localhost:3000/testToken/',{
@@ -84,7 +96,7 @@ Client.addMovie("Bodo","BodoPasswort","Der Herr der Ringe",180,12,"lotr").then((
                         console.log(data)
                        console.log(data.code)
                        Client.removeTicket("Martin","martinpw",data.ID).then((data)=>{
-                        console.log(data)
+                        console.log("here"+data)
                        })
                     })
                 })
@@ -105,3 +117,4 @@ Client.addMovie("Bodo","BodoPasswort","Der Herr der Ringe",180,12,"lotr").then((
 
 
 
+*/

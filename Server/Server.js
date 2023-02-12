@@ -22,43 +22,44 @@ function generateAccessToken(username, role){
     return jwt.sign({username:username, role:role},TOKEN_SECRET,{expiresIn : '1h'});
 }
 
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1]
 
-  if (token == null) return res.status(401).json("invalid token")
-
-
-}
-
-
-app.get('/getCinemaHall/:ID',function(req,res){
-let ID=req.params.ID;
-
-})
-app.get('/testToken/',function(req,res){
+app.use('/Customer',(req,res,next)=>{
     
-jwt.verify(req.headers.token,TOKEN_SECRET,(err, re)=>{
-console.log(err)
-if(err!=null){
-return}
-
-console.log(re)
-res.json("authentication successfull");
-})
-
-})
-
-app.use('/Manager',(req,res,next)=>{
-    console.log("middleware works")
     jwt.verify(req.headers.token,TOKEN_SECRET,(err, re)=>{
       if(err!=null){
         console.log(err.message)
         res.status(401).json("Invalid token")
-        
       }else{
-        next()
-      }
+        let tk=jwt.decode(req.headers.token,TOKEN_SECRET);
+        console.log(tk)
+        console.log(req.path+" from "+tk.username+" as "+tk.role)
+        if(tk.role!=="Customer"){
+            console.log("wrong type login")
+            res.status(401).json("Invalid type")
+            return;
+        }
+        next() }
+        
+    })
+   
+    });
+
+app.use('/Manager',(req,res,next)=>{
+   
+    jwt.verify(req.headers.token,TOKEN_SECRET,(err, re)=>{
+      if(err!=null){
+        console.log(err.message)
+        res.status(401).json("Invalid token")
+      }else{ 
+        let tk=jwt.decode(req.headers.token,TOKEN_SECRET);
+        console.log(tk)
+        console.log(req.path+" from "+tk.username+" as "+tk.role)
+        if(tk.role!=="Manager"){
+            console.log("wrong type login")
+            res.status(401).json("Invalid type")
+            return;
+        }
+        next() }
         
     })
    
@@ -88,19 +89,14 @@ app.get('/login/:username/:password/:type',function(req,res){
     res.json(token);
 })
 //todo: ensure correct hallID
-app.post('/Manager/setHall/:username/:password',function(req,res){
+app.post('/Manager/setHall/',function(req,res){
     console.log("postrequest sethall")
     req.body.
     console.log(hall)
 })
 
-app.get('/Manager/addHall/:username/:password',function(req,res){
 
-})
-
-app.get('/Manager/addSeat/:username/:password/:hallID/:type/:row/:number',function(req,res){
-   if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-    console.log("seat add request from "+req.params.username)
+app.get('/Manager/addSeat/:hallID/:type/:row/:number',function(req,res){
    try {
     let response=addSeat(req.params.hallID,req.params.type,req.params.row,req.params.number)
     console.log("response: "+response)
@@ -111,10 +107,7 @@ app.get('/Manager/addSeat/:username/:password/:hallID/:type/:row/:number',functi
    }
 
 })
-app.get('/Manager/removeSeat/:username/:password/:seatID/:hallID',function(req,res){
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-    console.log("seat remove request from "+req.params.username)
- 
+app.get('/Manager/removeSeat/:seatID/:hallID',function(req,res){
     try {
         let response=removeSeat(req.params.hallID,req.params.seatID);
         res.json(response);
@@ -134,10 +127,8 @@ app.get('/addUser/:username/:password/:type',function(req,res){
         res.status(404).json(error.message);
     }
 })
-app.get('/Customer/removeUser/:username/:password/:type/:userID',function(req,res){
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-    console.log("user remove request from "+req.params.username)
- 
+app.get('/Customer/removeUser/:type/:userID',function(req,res){
+
     try {
          let response=removeUser(req.params.userID);
          res.json(response);
@@ -147,8 +138,6 @@ app.get('/Customer/removeUser/:username/:password/:type/:userID',function(req,re
  })
 
  app.get('/getHall/:hallID',function(req,res){
-    console.log("get hall request  ")
- 
     try {
          let response=getHall(req.params.hallID);
          res.json(response);
@@ -156,9 +145,7 @@ app.get('/Customer/removeUser/:username/:password/:type/:userID',function(req,re
          res.status(404).json(error.message);
      }
  })
- app.get('/Manager/removeHall/:username/:password/:hallID',function(req,res){
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-    console.log("remove hall request from "+req.params.username)
+ app.get('/Manager/removeHall/:hallID',function(req,res){
  
     try {
         let response=removeHall(req.params.hallID);
@@ -178,7 +165,6 @@ app.get('/getMovies',function(req,res){
     }
 })
 app.get('/getMovieByID/:movieID',function(req,res){
-    console.log("get MoviebyID request from ")
     
     try {
         let response=getMovieByID(req.params.movieID);
@@ -187,10 +173,8 @@ app.get('/getMovieByID/:movieID',function(req,res){
         res.status(404).json(error.message);
     }
 })
-app.get('/Manager/removeMovie/:username/:password/:movieID',function(req,res){
-    console.log("remove Movie request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-   
+app.get('/Manager/removeMovie/:movieID',function(req,res){
+    
     try {
         let response=removeMovie(req.params.movieID);
         res.json(response);
@@ -198,10 +182,8 @@ app.get('/Manager/removeMovie/:username/:password/:movieID',function(req,res){
         res.status(404).json(error.message);
     }
 })
-app.get('/Manager/addMovie/:username/:password/:name/:duration/:minimumAge/:description',function(req,res){
-    console.log("remove Movie request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-   
+app.get('/Manager/addMovie/:name/:duration/:minimumAge/:description',function(req,res){
+  
     try {
         let response=addMovie(req.params.name,req.params.duration,req.params.minimumAge,req.params.description);
         res.json(response);
@@ -209,9 +191,7 @@ app.get('/Manager/addMovie/:username/:password/:name/:duration/:minimumAge/:desc
         res.status(404).json(error.message);
     }
 })
-app.get('/Manager/addPresentation/:username/:password/:movieID/:date/:hallID',function(req,res){
-    console.log("add Presentation request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
+app.get('/Manager/addPresentation/:movieID/:date/:hallID',function(req,res){
    
     try {
         let response=JsonHandler.addPresentation(req.params.movieID,req.params.date,req.params.hallID)
@@ -220,9 +200,7 @@ app.get('/Manager/addPresentation/:username/:password/:movieID/:date/:hallID',fu
         res.status(404).json(error.message);
     }
 })
-app.get('/Manager/removePresentation/:username/:password/:presentationID',function(req,res){
-    console.log("remove Presentation request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
+app.get('/Manager/removePresentation/:presentationID',function(req,res){
    
     try {
         let response=JsonHandler.removePresentation(req.params.presentationID)
@@ -231,10 +209,8 @@ app.get('/Manager/removePresentation/:username/:password/:presentationID',functi
         res.status(404).json(error.message);
     }
 })
-app.get('/Customer/BookTicket/:username/:password/:presentationID/:seatID',function(req,res){
-    console.log("book ticket request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Customer",res)==undefined) return; 
-   
+app.get('/Customer/BookTicket/:presentationID/:seatID',function(req,res){
+  
     try { 
         let userID=JsonHandler.getUserID(req.params.username,"Customer")
         console.log("User found: "+ userID)
@@ -244,10 +220,8 @@ app.get('/Customer/BookTicket/:username/:password/:presentationID/:seatID',funct
         res.status(404).json(error.message);
     }
 })
-app.get('/Customer/removeTicket/:username/:password/:TicketID',function(req,res){
-    console.log("remove ticket request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Customer",res)==undefined) return; 
-   
+app.get('/Customer/removeTicket/:TicketID',function(req,res){
+    
     try { 
         let userID=JsonHandler.getUserID(req.params.username,"Customer")
         let response=JsonHandler.removeTicket(req.params.TicketID,userID);
@@ -261,17 +235,6 @@ app.get('/Customer/removeTicket/:username/:password/:TicketID',function(req,res)
 
  
  
-
-function checkLogin(username,password,type,res){
-    try {
-       let ret= JsonHandler.login(username,password,type);
-       return ret
-    } catch (error) {
-        console.log(error.message)
-        res.status(404).json(error.message);
-    
-    }
-}
 
 
 app.get('')

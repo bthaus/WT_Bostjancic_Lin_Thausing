@@ -39,7 +39,8 @@ module.exports = {
        return new Promise((resolve,reject)=>{
         get('login/'+username+'/'+password+'/'+type).then((data)=>{
             token=data;
-            console.log("token saved")
+            console.log("token saved " +token.username+token)
+    
             resolve(data)
         }).catch((err)=>{
             reject(err);
@@ -62,23 +63,23 @@ module.exports = {
                })
         })
     },
-    addSeat: function(username,password,hallID,type,row,number){
-        return get('Manager/addSeat/'+username+'/'+password+"/"+hallID+"/"+type+"/"+row+"/"+number)
+    addSeat: function(hallID,type,row,number){
+        return get('Manager/addSeat/'+hallID+"/"+type+"/"+row+"/"+number)
     },
-    removeSeat: function(username,password,seatID,hallID){
-        return get("Manager/removeSeat/"+username+"/"+password+"/"+seatID+"/"+hallID)
+    removeSeat: function(seatID,hallID){
+        return get("Manager/removeSeat/"+seatID+"/"+hallID)
     },
     addUser: function(username,password,type){
         return get("addUser/"+username+"/"+password+"/"+type);
     },
-    removeUser: function(username,password,type,userID){
-        return get("Customer/removeUser/"+username+"/"+password+"/"+type+"/"+userID)
+    removeUser: function(type,userID){
+        return get("Customer/removeUser/"+type+"/"+userID)
     },
     getHall: function(hallID){
         return get("getHall/"+hallID);
     },
-    removeHall: function(username,password,hallid){
-        return get("Manager/removeHall/"+username+"/"+password+"/"+hallid)
+    removeHall: function(hallid){
+        return get("Manager/removeHall/"+hallid)
     },
     getMovies:function(){
         return get("getMovies");
@@ -86,23 +87,23 @@ module.exports = {
     getMovieByID: function(movieID){
         return get("getMovieByID/"+movieID);
     },
-    removeMovie: function(movieID,username,password){
-        return get("Manager/removeMovie/"+username+"/"+password+"/"+movieID)
+    removeMovie: function(movieID){
+        return get("Manager/removeMovie/"+movieID)
     },
-    addMovie: function(username,password,name,duration,minimumAge,description){
-        return get("Manager/addMovie/"+username+"/"+password+"/"+name+"/"+duration+"/"+minimumAge+"/"+description)
+    addMovie: function(name,duration,minimumAge,description){
+        return get("Manager/addMovie/"+name+"/"+duration+"/"+minimumAge+"/"+description)
     },
-    addPresentation: function(username,password,movieID,date,hallID){
-        return get("Manager/addPresentation/"+username+'/'+password+'/'+movieID+'/'+date+'/'+hallID)
+    addPresentation: function(movieID,date,hallID){
+        return get("Manager/addPresentation/"+movieID+'/'+date+'/'+hallID)
     },
-    removePresentation: function(username,password,presentationID){
-        return get("Manager/removePresentation/"+username+'/'+password+'/'+presentationID);
+    removePresentation: function(presentationID){
+        return get("Manager/removePresentation/"+presentationID);
     },
-    bookTicket: function(username,password,presentationID,seatID){
-        return get("Customer/BookTicket/"+username+'/'+password+'/'+presentationID+'/'+seatID)
+    bookTicket: function(presentationID,seatID){
+        return get("Customer/BookTicket/"+presentationID+'/'+seatID)
     },
-    removeTicket: function(username,password,TicketID){
-        return get("Customer/removeTicket/"+username+'/'+password+'/'+TicketID)
+    removeTicket: function(TicketID){
+        return get("Customer/removeTicket/"+TicketID)
     
     }
 

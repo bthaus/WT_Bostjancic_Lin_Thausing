@@ -1,14 +1,14 @@
 
 const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
-Client.addSeat("Bodo","BodoPasswort",0,"normal",0,0).then((data)=>{
+Client.addSeat(0,"normal",0,0).then((data)=>{
     console.log(data)
 }).catch((data)=>{
     console.log(data)
 })
 Client.login("Bodo","BodoPasswort","Manager").then((data)=>{
     console.log(data);
-    Client.addSeat("Bodo","BodoPasswort",0,"normal",0,0).then((data)=>{
+    Client.addSeat(0,"normal",0,0).then((data)=>{
         console.log(data)
     })
 })

@@ -86,7 +86,6 @@ module.exports = {
             const reviews = new Array(0);
             const presentations=new Array(0);
             this.presentations=presentations;
-            reviews.push("Die Hard is a classic action film that combines high-stakes tension, expertly choreographed action scenes, and a healthy dose of humor, making it a must-see for any fan of the genre.")
             this.reviews = reviews;
             this.name = name;
             this.description = description;
@@ -220,6 +219,9 @@ module.exports = {
     },
     getUserID: function(username,type){
         return getUserID(username,type)
+    },
+    addReview: function(review,Sterne, movieID){
+        return addReview(review,Sterne,movieID)
     }
 
 
@@ -813,8 +815,19 @@ function removeTicket(ticketID, userID) {
 }
 
 //customer
-function addReview(review, movie) {
-
+function addReview(review,Sterne, movieID) {
+    if(Sterne<0||Sterne>5){
+        throw new Error("Sterne sind nur zw 0 und 5 erlaubt")
+    }
+let movie=getMovieByID(movieID)
+movie.reviews.push({
+    review:review,
+    stars:Sterne
+});
+console.log("updating movie")
+updateMovie(movie);
+console.log("review added")
+return "review added"
 }
 function give(arg) {
     return { "argument": +arg }

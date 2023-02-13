@@ -2,15 +2,14 @@
 const JsonHandler = require('../../Server/JsonHandler');
 const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
-Client.login("Bodo","BodoPasswort","Manager").then((data)=>{
-    Client.getMovieByID(1).then((data)=>{
+Client.getMovies().then((data)=>{
+    console.log(data)
+})
+Client.login("melly","mellyPW","Customer").then(()=>{
+    Client.addReview("zwei sekunden",3,0).then((data)=>{
         console.log(data)
-        data.name="i have been changed"
-        Client.updateMovie(data).then((data)=>{
+        Client.getMovieByID(0).then((data)=>{
             console.log(data)
-            Client.getMovies().then((data)=>{
-                console.log(data)
-            })
         })
     })
 })

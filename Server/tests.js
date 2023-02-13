@@ -141,6 +141,9 @@ console.log(JsonHandler.updateMovie(movies[0]));
 JsonHandler.addPresentation(4,"today",1)
 console.log(JsonHandler.getMovies())
 
+JsonHandler.addReview("find ich nicht besonders gut",1,0)
+console.log(JsonHandler.getMovieByID(0))
+
 
 
 

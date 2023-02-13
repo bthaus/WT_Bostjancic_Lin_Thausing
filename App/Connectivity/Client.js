@@ -100,7 +100,9 @@ module.exports = {
     },
     removeTicket: function(TicketID){
         return get("Customer/removeTicket/"+TicketID)
-    
+    },
+    addReview: function(review,stars,movieID){
+        return get("Customer/addReview/"+review+"/"+stars+"/"+movieID);
     }
 
 

@@ -103,6 +103,7 @@ app.get('/Manager/setHall/:hallstring',function(req,res){
         res.status(404).json(error.message)
        }
 })
+
 app.get('/Manager/updateHall/:hallstring',function(req,res){
     try {
        
@@ -127,7 +128,17 @@ app.get('/Manager/updateMovie/:movieString',function(req,res){
        }
 })
 
-
+app.get('/Customer/addReview/:review/:Sterne/:movieID',function(req,res){
+    try {
+     let response=JsonHandler.addReview(req.params.review,req.params.Sterne,req.params.movieID)
+     console.log("response: "+response)
+     res.json(response);
+ } catch (error) {
+     console.log(error.message)
+     res.status(404).json(error.message)
+    }
+ 
+ })
 app.get('/Manager/addSeat/:hallID/:type/:row/:number',function(req,res){
    try {
     let response=addSeat(req.params.hallID,req.params.type,req.params.row,req.params.number)

@@ -286,6 +286,7 @@ function initDefaultData() {
         
         let pres = new module.exports.Presentation(mov, new Date("July 4 1776 12:30"))
         element.presentations.push(pres);
+        mov.presentations.push(new Date("July 4 1776 12:30"))
         //todo: add pres to mov for def data
         movies.push(mov)
         allschedules.push(pres);
@@ -656,11 +657,13 @@ function removePresentation(presentationID) {
     let presIndex = -1;
     let hallcounter = 0;
     let prescounter = 0;
+    let removedate=undefined;
     cinema.halls.forEach(hall => {
         hall.presentations.forEach(pres => {
             if (pres.ID == presentationID) {
                 hallindex = hallcounter;
                 presIndex = prescounter;
+                removedate=pres.date;
             }
             prescounter++;
         });
@@ -668,6 +671,22 @@ function removePresentation(presentationID) {
     });
 
     if (hallindex == -1 || presIndex == -1) throw new Error("no presentation with given ID found");
+    let movie=cinema.halls[hallindex].presentations[presIndex].movie;
+    let dateindex=-1;
+    let datecounter=0;
+    movie.presentations.forEach(element=>{
+        if(element.date===removedate){
+            dateindex=datecounter;
+        }
+        datecounter++;
+    })
+    if(dateindex===-1){
+        console.log("------------------------------wat")
+    }else{
+        movie.presentations.splice(dateindex,1);
+        updateMovie(movie)
+    }
+
     cinema.halls[hallindex].presentations.splice(presIndex, 1);
     setCinemaImpl(JSON.stringify(cinema));
     console.log("presentation successfully removed");

@@ -144,6 +144,13 @@ console.log(JsonHandler.getMovies())
 JsonHandler.addReview("find ich nicht besonders gut",1,0)
 console.log(JsonHandler.getMovieByID(0))
 
+let id=JsonHandler.addPresentation(2,"morgen",1)
+console.log(id)
+console.log(JsonHandler.getMovieByID(2))
+JsonHandler.removePresentation(id)
+console.log(JsonHandler.getMovieByID(2))
+
+
 
 
 

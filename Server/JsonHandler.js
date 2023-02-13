@@ -84,6 +84,8 @@ module.exports = {
         constructor(name, description, duration, minimumAge) {
             this.ID = movieID++;
             const reviews = new Array(0);
+            const presentations=new Array(0);
+            this.presentations=presentations;
             reviews.push("Die Hard is a classic action film that combines high-stakes tension, expertly choreographed action scenes, and a healthy dose of humor, making it a must-see for any fan of the genre.")
             this.reviews = reviews;
             this.name = name;
@@ -164,9 +166,6 @@ module.exports = {
     removeUser: function (userID) {
         return removeUser(userID);
     },
-    addPresentation: function (movie,) {
-
-    },
     login: function (username, password, type) {
         let ret = containsUserimpl(username, password, type);
         if (ret == undefined) throw new Error("no such user found")
@@ -200,6 +199,9 @@ module.exports = {
     },
     addMovie: function (name, duration, minimumAge, description) {
         return addMovie(new module.exports.Movie(name, description, duration, minimumAge));
+    },
+    updateMovie:function(movie){
+        return updateMovie(movie);
     },
     addPresentation: function (movieID, date, hallID) {
         return addPresentation(movieID, date, hallID)
@@ -278,14 +280,19 @@ function initDefaultData() {
     ima.addHall(hall)
 
     const allschedules = new Array(0);
+    const movies=new Array(0);
     ima.halls.forEach(element => {
-        let pres = new module.exports.Presentation(new module.exports.Movie("die hard", "dying hard", 120, 18), new Date("July 4 1776 12:30"))
+        let mov=new module.exports.Movie("die hard", "dying hard", 120, 18)
+        
+        let pres = new module.exports.Presentation(mov, new Date("July 4 1776 12:30"))
         element.presentations.push(pres);
+        //todo: add pres to mov for def data
+        movies.push(mov)
         allschedules.push(pres);
     });
     let data = JSON.stringify(ima);
     writeFile(data, "Cinema")
-    writeFile(JSON.stringify(allschedules), "Movies")
+    writeFile(JSON.stringify(movies), "Movies")
 
 }
 function readFileByName(name) {
@@ -526,8 +533,8 @@ function addMovie(movie) {
         let id;
         let name;
         try {
-            id = element.movie.ID;
-            name = element.movie.name;
+            id = element.ID;
+            name = element.name;
         } catch (error) {
 
         }
@@ -539,19 +546,32 @@ function addMovie(movie) {
         }
 
     });
-    let pres = new module.exports.Presentation(movie, new Date(Date()))
-    movies.push(pres);
+    //let pres = new module.exports.Presentation(movie, new Date(Date()))
+    movies.push(movie);
     writeFile(JSON.stringify(movies), "Movies");
     console.log(movie.name + " added to library");
     return movie.ID;
 }
 function updateMovie(movie){
-    let movies=readFileByName("Movies")
+    let movies=JSON.parse(readFileByName("Movies"))
+    let checker=undefined;
+    let counter=0;
+    console.log("updating movie")
     movies.forEach((element)=>{
         if(movie.ID===element.ID){
-            
+            checker=counter;
         }
+        counter++;
     })
+    if(checker==undefined){
+        throw new Error("movie not found")
+    }
+    movies[checker]=movie;
+
+
+    writeFile(JSON.stringify(movies),"Movies");
+    console.log("movie successfully updated")
+    return "movie successfully updated"
 }
 function getMovies() {
     return JSON.parse(readFileByName("Movies"));
@@ -565,7 +585,7 @@ function getMovieByID(movieID) {
 
         let temp;
         try {
-            temp = element.movie.ID;
+            temp = element.ID;
         } catch (error) {
 
         }
@@ -577,7 +597,7 @@ function getMovieByID(movieID) {
 
     });
     if (movie == undefined) throw new Error("no such movie found")
-    console.log("Movie found: " + movie.movie.name)
+    console.log("Movie found: " + movie.name)
     return movie;
 }
 function removeMovie(movieID) {
@@ -589,7 +609,7 @@ function removeMovie(movieID) {
     presentations.forEach(pres => {
         let temp;
         try {
-            temp = pres.movie.ID;
+            temp = pres.ID;
         } catch (error) {
 
         }
@@ -602,7 +622,7 @@ function removeMovie(movieID) {
     });
     if (movie == undefined) throw new Error("no such movie found")
     if (index == -1) throw new Error("no such movie found again?=")
-    console.log("Movie removed: " + movie.movie.name)
+    console.log("Movie removed: " + movie.name)
     presentations.splice(index, 1);
     writeFile(JSON.stringify(presentations), "Movies");
     console.log("movies updated")
@@ -611,7 +631,9 @@ function removeMovie(movieID) {
 }
 function addPresentation(movieID, date, hallID) {
     let hall = getHall(hallID);
-    let movie = getMovieByID(movieID).movie;
+    let movie = getMovieByID(movieID);
+    
+    
     //todo: add date to movie
     hall.presentations.forEach(element => {
         //todo: fix date stuff
@@ -624,6 +646,8 @@ function addPresentation(movieID, date, hallID) {
     hall.presentations.push(pres)
     setHall(hall);
     console.log("Presentation added to hall " + hallID + " with movie " + movie.name + " at time " + date)
+    movie.presentations.push(data);
+    updateMovie(movie)
     return pres.ID;
 }
 function removePresentation(presentationID) {

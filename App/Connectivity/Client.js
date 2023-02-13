@@ -86,6 +86,9 @@ module.exports = {
     addMovie: function(name,duration,minimumAge,description){
         return get("Manager/addMovie/"+name+"/"+duration+"/"+minimumAge+"/"+description)
     },
+    updateMovie: function(movie){
+        return get("Manager/updateMovie/"+JSON.stringify(movie))
+    },
     addPresentation: function(movieID,date,hallID){
         return get("Manager/addPresentation/"+movieID+'/'+date+'/'+hallID)
     },

@@ -115,6 +115,18 @@ app.get('/Manager/updateHall/:hallstring',function(req,res){
        }
 })
 
+app.get('/Manager/updateMovie/:movieString',function(req,res){
+    try {
+       
+        let response=JsonHandler.updateMovie(JSON.parse(req.params.movieString))
+        console.log("response: "+response)
+        res.json(response);
+    } catch (error) {
+        console.log(error.message)
+        res.status(404).json(error.message)
+       }
+})
+
 
 app.get('/Manager/addSeat/:hallID/:type/:row/:number',function(req,res){
    try {

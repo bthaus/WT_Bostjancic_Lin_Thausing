@@ -1,7 +1,7 @@
 const JsonHandler=require('./JsonHandler');
 
 JsonHandler.initDefault();
-
+console.log(JsonHandler.getMovies())
 let date=new Date("July 4 1776 12:30");
 console.log(date)
 date=JSON.stringify(date)
@@ -134,5 +134,12 @@ try {
 } catch (error) {
     console.log(error.message)
 }
+let movies=JsonHandler.getMovies()
+console.log(movies)
+movies[0].name="i have been changed"
+console.log(JsonHandler.updateMovie(movies[0]));
+console.log(JsonHandler.getMovies())
+
+
 
 

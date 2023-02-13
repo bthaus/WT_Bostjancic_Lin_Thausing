@@ -3,14 +3,15 @@ const JsonHandler = require('../../Server/JsonHandler');
 const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
 Client.login("Bodo","BodoPasswort","Manager").then((data)=>{
-    let hall=new JsonHandler.Hall(10,"Normal","3d");
-    console.log("trying to set hall")
-    Client.setHall(hall).then((data)=>{
+    Client.getMovieByID(1).then((data)=>{
         console.log(data)
-        hall.ID=data;
-        hall.features
-    }).catch((err)=>{
-        console.log("err "+err)
+        data.name="i have been changed"
+        Client.updateMovie(data).then((data)=>{
+            console.log(data)
+            Client.getMovies().then((data)=>{
+                console.log(data)
+            })
+        })
     })
 })
 /*

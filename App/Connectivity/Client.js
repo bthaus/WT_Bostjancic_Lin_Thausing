@@ -1,5 +1,5 @@
 const { response } = require("express");
-let token=null;
+let token="gasp no token here";
 module.exports = {
     hello: function() {
        console.log("worked");
@@ -47,21 +47,8 @@ module.exports = {
         })
        }) 
     },
-    setHall:function(hall,username,password){
-        return new Promise((resolve,reject)=>{
-            fetch('http://localhost:3000/setHall/'+username+'/'+password,{
-                method: 'POST',
-                body: JSON.stringify(hall)
-            }).then((response)=>{
-                
-                return response.json();
-               }).then((data)=>{
-                resolve(data)
-               }).catch((err)=>{
-                console.log("some error happened")
-                reject(err);
-               })
-        })
+    setHall:function(hall){
+       return get("Manager/setHall/"+JSON.stringify(hall))
     },
     addSeat: function(hallID,type,row,number){
         return get('Manager/addSeat/'+hallID+"/"+type+"/"+row+"/"+number)

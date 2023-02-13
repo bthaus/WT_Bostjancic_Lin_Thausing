@@ -11,7 +11,8 @@ app.use(cors()); // allow all origins -> Access-Control-Allow-Origin: *
 app.use(express.static('public')); // host public folder
 JsonHandler.initDefault();
 const jwt=require("jsonwebtoken")
-const dotenv= require("dotenv")
+const dotenv= require("dotenv");
+const { setHall } = require('../App/Connectivity/Client');
 dotenv.config();
 process.env.TOKEN_SECRET;
 const expiryTime='1800s'
@@ -45,7 +46,7 @@ app.use('/Customer',(req,res,next)=>{
     });
 
 app.use('/Manager',(req,res,next)=>{
-   
+ 
     jwt.verify(req.headers.token,TOKEN_SECRET,(err, re)=>{
       if(err!=null){
         console.log(err.message)
@@ -64,6 +65,8 @@ app.use('/Manager',(req,res,next)=>{
     })
    
     });
+
+
 
 app.get('/getCinema',function(req,res){
     console.log("cinema requested")
@@ -89,10 +92,16 @@ app.get('/login/:username/:password/:type',function(req,res){
     res.json(token);
 })
 //todo: ensure correct hallID
-app.post('/Manager/setHall/',function(req,res){
-    console.log("postrequest sethall")
-    req.body.
-    console.log(hall)
+app.get('/Manager/setHall/:hallstring',function(req,res){
+    try {
+       
+        let response=JsonHandler.addHall(JSON.parse(req.params.hallstring))
+        console.log("response: "+response)
+        res.json(response);
+    } catch (error) {
+        console.log(error.message)
+        res.status(404).json(error.message)
+       }
 })
 
 

@@ -1,15 +1,14 @@
 
+const JsonHandler = require('../../Server/JsonHandler');
 const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
-Client.addSeat(0,"normal",0,0).then((data)=>{
-    console.log(data)
-}).catch((data)=>{
-    console.log(data)
-})
 Client.login("Bodo","BodoPasswort","Manager").then((data)=>{
-    console.log(data);
-    Client.addSeat(0,"normal",0,0).then((data)=>{
+    let hall=new JsonHandler.Hall(10,"Normal","3d");
+    console.log("trying to set hall")
+    Client.setHall(hall).then((data)=>{
         console.log(data)
+    }).catch((err)=>{
+        console.log("err "+err)
     })
 })
 /*

@@ -36,25 +36,7 @@ module.exports = {
             this.seats = seats;
 
         }
-        //todo remove, replace seat and proper implementation
-        addSeat(seat) {
-            this.seats.push(seat)
-        }
 
-        addPresentations(presentations) {
-            this.presentations = presentations;
-        }
-        addPresentation(Presentation) {
-            this.presentations.push(Presentation);
-        }
-        checkCollision(movie, date) {
-            this.presentations.forEach(element => {
-                if (element.date === date) {
-                    throw new Error("Theres already a booked movie at that time")
-                }
-            });
-            return false;
-        }
     },
     Seat: class Seat {
         //fields: row=int
@@ -160,7 +142,7 @@ module.exports = {
     addSeat: function (hallID, type, row, seatID) {
         return addSeat(new module.exports.Seat(row, seatID, type), hallID);
     },
-    removeSeat: function (hallID, seatID) {
+    removeSeat: function (hallID, seatID,) {
         return removeSeat(hallID, seatID);
     },
     getCinema: function () {
@@ -198,8 +180,8 @@ module.exports = {
         return getHall(hallID);
     },
     //todo: talk about parameters
-    addHall: function () {
-
+    addHall: function (hall) {
+            return addHall(hall)
     },
     removeHall: function (hallID) {
         return removeHall(hallID);
@@ -288,7 +270,8 @@ function initDefaultData() {
 
     let ima = new module.exports.Cinema(3, 7, 'normal');
     let hall = new module.exports.Hall(10, "luxury", "atmos");
-    hall.addSeat(new module.exports.Seat(1, 0, "replacable"))
+   // hall.addSeat(new module.exports.Seat(1, 0, "replacable"))
+    hall.seats.push(new module.exports.Seat(1,0,"replacable"))
     ima.addHall(hall)
 
     const allschedules = new Array(0);
@@ -347,6 +330,15 @@ function containsUserimpl(username, password, type) {
 //todo
 
 //manager
+function addHall(hall){
+console.log("adding hall")
+hall.ID=hallID++;
+console.log(hall)
+setHall(hall)
+console.log("hall set")
+return hall.ID;
+
+}
 function addSeat(seat, hallid) {
     console.log("adding seat to hall " + hallid)
     let hall = getHall(hallid);
@@ -601,7 +593,7 @@ function removeMovie(movieID) {
 function addPresentation(movieID, date, hallID) {
     let hall = getHall(hallID);
     let movie = getMovieByID(movieID).movie;
-
+    //todo: add date to movie
     hall.presentations.forEach(element => {
         //todo: fix date stuff
         if (new Date(element.start) === date) {

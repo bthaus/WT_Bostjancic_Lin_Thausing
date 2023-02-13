@@ -646,7 +646,7 @@ function addPresentation(movieID, date, hallID) {
     hall.presentations.push(pres)
     setHall(hall);
     console.log("Presentation added to hall " + hallID + " with movie " + movie.name + " at time " + date)
-    movie.presentations.push(data);
+    movie.presentations.push(date);
     updateMovie(movie)
     return pres.ID;
 }

@@ -138,7 +138,9 @@ let movies=JsonHandler.getMovies()
 console.log(movies)
 movies[0].name="i have been changed"
 console.log(JsonHandler.updateMovie(movies[0]));
+JsonHandler.addPresentation(4,"today",1)
 console.log(JsonHandler.getMovies())
+
 
 
 

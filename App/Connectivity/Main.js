@@ -7,6 +7,8 @@ Client.login("Bodo","BodoPasswort","Manager").then((data)=>{
     console.log("trying to set hall")
     Client.setHall(hall).then((data)=>{
         console.log(data)
+        hall.ID=data;
+        hall.features
     }).catch((err)=>{
         console.log("err "+err)
     })

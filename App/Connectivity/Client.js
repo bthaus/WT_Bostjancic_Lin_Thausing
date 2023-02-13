@@ -47,8 +47,14 @@ module.exports = {
         })
        }) 
     },
+    //BIG NONO: dont add presentations in the hall set here. this would destroy the coherence of the ids of all presentations and movies. 
+    // seats are semi okay, as they are mapped severside (technically could do the same with pres and movies, would be significantly less efficieant tho)
+    //hence not only the hall id is returned, but the entire hall object. this way you also have all fresh ids of all seats
     setHall:function(hall){
        return get("Manager/setHall/"+JSON.stringify(hall))
+    },
+    updateHall:function(hall){
+        return get("Manager/updateHall"+JSON.stringify(hall))
     },
     addSeat: function(hallID,type,row,number){
         return get('Manager/addSeat/'+hallID+"/"+type+"/"+row+"/"+number)

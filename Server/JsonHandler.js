@@ -183,6 +183,9 @@ module.exports = {
     addHall: function (hall) {
             return addHall(hall)
     },
+    updateHall: function(hall){
+        return updateHall(hall);
+    },
     removeHall: function (hallID) {
         return removeHall(hallID);
     },
@@ -333,11 +336,19 @@ function containsUserimpl(username, password, type) {
 function addHall(hall){
 console.log("adding hall")
 hall.ID=hallID++;
+hall.seats.forEach((seat)=>{
+    seat.ID=seatID++;
+})
+
 console.log(hall)
 setHall(hall)
 console.log("hall set")
-return hall.ID;
+return hall;
 
+}
+function updateHall(hall){
+    setHall(hall);
+    return "successfull"
 }
 function addSeat(seat, hallid) {
     console.log("adding seat to hall " + hallid)
@@ -533,6 +544,14 @@ function addMovie(movie) {
     writeFile(JSON.stringify(movies), "Movies");
     console.log(movie.name + " added to library");
     return movie.ID;
+}
+function updateMovie(movie){
+    let movies=readFileByName("Movies")
+    movies.forEach((element)=>{
+        if(movie.ID===element.ID){
+            
+        }
+    })
 }
 function getMovies() {
     return JSON.parse(readFileByName("Movies"));

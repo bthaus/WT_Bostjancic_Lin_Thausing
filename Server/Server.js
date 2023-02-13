@@ -103,6 +103,17 @@ app.get('/Manager/setHall/:hallstring',function(req,res){
         res.status(404).json(error.message)
        }
 })
+app.get('/Manager/updateHall/:hallstring',function(req,res){
+    try {
+       
+        let response=JsonHandler.updateHall(JSON.parse(req.params.hallstring))
+        console.log("response: "+response)
+        res.json(response);
+    } catch (error) {
+        console.log(error.message)
+        res.status(404).json(error.message)
+       }
+})
 
 
 app.get('/Manager/addSeat/:hallID/:type/:row/:number',function(req,res){

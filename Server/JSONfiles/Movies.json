@@ -1,1 +1,44 @@
-[{"ID":0,"presentations":["1776-07-04T11:24:39.000Z"],"reviews":[{"review":"zwei sekunden","stars":"3"}],"name":"die hard","description":"dying hard","duration":120,"minimumAge":18},{"ID":1,"presentations":["1776-07-04T11:24:39.000Z"],"reviews":[],"name":"die hard","description":"dying hard","duration":120,"minimumAge":18},{"ID":2,"presentations":["1776-07-04T11:24:39.000Z"],"reviews":[],"name":"die hard","description":"dying hard","duration":120,"minimumAge":18},{"ID":3,"presentations":["1776-07-04T11:24:39.000Z"],"reviews":[],"name":"die hard","description":"dying hard","duration":120,"minimumAge":18}]
+[
+    {
+        "ID": 0,
+        "presentations": [
+            {
+                "date": "2022-07-04T14:30:00.000Z",
+                "id": 4
+            }
+        ],
+        "reviews": [
+            {
+                "review": "find ich nicht besonders gut",
+                "stars": 1
+            }
+        ],
+        "name": "i have been changed",
+        "description": "dying hard",
+        "duration": 120,
+        "minimumAge": 18
+    },
+    {
+        "ID": 2,
+        "presentations": [],
+        "reviews": [],
+        "name": "die hard",
+        "description": "dying hard",
+        "duration": 120,
+        "minimumAge": 18
+    },
+    {
+        "ID": 4,
+        "presentations": [
+            {
+                "date": "today",
+                "id": 6
+            }
+        ],
+        "reviews": [],
+        "name": "kreis",
+        "description": "ist rund",
+        "duration": 120,
+        "minimumAge": 12
+    }
+]

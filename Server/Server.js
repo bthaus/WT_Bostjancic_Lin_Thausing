@@ -3,6 +3,7 @@
 let express = require('express');
 const app = express();
 app.use(express.json())
+const debugging=true;
 
 const JsonHandler=require('./JsonHandler');
 let fs = require('fs');
@@ -36,7 +37,12 @@ app.use((req,res,next)=>{
         }
         if(!sanitize(element)){
             console.log("invalid input detected and rejected: "+element)
-            res.status(666).json("invalid input detected. only insert [A-Za-z0-9 ]*")
+            if(debugging){
+                res.json("invalid input: "+element)
+            }else{
+                res.status(666).json("invalid input detected. only insert [A-Za-z0-9 ]*")
+            
+            }
             ret=true;
         }
     })
@@ -53,9 +59,11 @@ app.use('/Customer',(req,res,next)=>{
         res.status(401).json("Invalid token")
       }else{
         let tk=jwt.decode(req.headers.token,TOKEN_SECRET);
+        if(debugging){
         console.log(tk)
         console.log(req.path+" from "+tk.username+" as "+tk.role)
-        if(tk.role!=="Customer"){
+        }
+         if(tk.role!=="Customer"){
             console.log("wrong type login")
             res.status(401).json("Invalid type")
             return;
@@ -74,8 +82,9 @@ app.use('/Manager',(req,res,next)=>{
         res.status(401).json("Invalid token")
       }else{ 
         let tk=jwt.decode(req.headers.token,TOKEN_SECRET);
-        console.log(tk)
+       if(debugging){ console.log(tk)
         console.log(req.path+" from "+tk.username+" as "+tk.role)
+       }
         if(tk.role!=="Manager"){
             console.log("wrong type login")
             res.status(401).json("Invalid type")
@@ -98,7 +107,8 @@ app.post('/login',function(req,res){
 
     const token=generateAccessToken(req.body.username,req.body.type);
     token.role=req.params.type;
-    console.log("login request from "+req.body.username+" with pw "+req.body.password)
+    if(debugging){console.log("login request from "+req.body.username+" with pw "+req.body.password)
+    }
     try {
         let result=JsonHandler.login(req.body.username,req.body.password,req.body.type);
     } catch (error) {
@@ -111,6 +121,7 @@ app.post('/login',function(req,res){
 })
 //input: username, passwort und type als string
 //output: JSON User/error 404 sorry cant find that
+/*
 app.get('/login/:username/:password/:type',function(req,res){
     console.log("Logging in")
 
@@ -127,6 +138,7 @@ app.get('/login/:username/:password/:type',function(req,res){
     }
     res.json(token);
 })
+*/
 //todo: ensure correct hallID
 app.get('/Manager/setHall/:hallstring',function(req,res){
     try {
@@ -313,10 +325,7 @@ app.get('/Customer/removeTicket/:TicketID',function(req,res){
 })
 
  
- 
 
-
-app.get('')
 
 
 

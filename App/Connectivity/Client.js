@@ -37,7 +37,15 @@ module.exports = {
     //returns string
     login:function(username,password,type){
        return new Promise((resolve,reject)=>{
-        get('login/'+username+'/'+password+'/'+type).then((data)=>{
+        fetch("http://localhost:3000/login",{
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify({
+                username: username,
+                password: password,
+                type: type
+            })
+        }).then((data)=>{return data.json()}).then((data)=>{
             token=data;
             console.log("token saved " +token.username+token)
     

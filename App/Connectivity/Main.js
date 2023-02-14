@@ -2,9 +2,7 @@
 const JsonHandler = require('../../Server/JsonHandler');
 const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
-Client.getMovies().then((data)=>{
-    console.log(data)
-})
+
 Client.login("melly","mellyPW","Customer").then(()=>{
     Client.addReview("zwei sekunden",3,0).then((data)=>{
         console.log(data)

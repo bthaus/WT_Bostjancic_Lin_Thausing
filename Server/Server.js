@@ -3,6 +3,7 @@
 let express = require('express');
 const app = express();
 app.use(express.json())
+
 const JsonHandler=require('./JsonHandler');
 let fs = require('fs');
 let cors = require('cors');
@@ -72,7 +73,22 @@ app.get('/getCinema',function(req,res){
     console.log("cinema requested")
     res.json(JsonHandler.getCinema());
 })
+app.post('/login',function(req,res){
+    console.log("Logging in")
 
+    const token=generateAccessToken(req.body.username,req.body.type);
+    token.role=req.params.type;
+    console.log("login request from "+req.body.username+" with pw "+req.body.password)
+    try {
+        let result=JsonHandler.login(req.body.username,req.body.password,req.body.type);
+    } catch (error) {
+        console.log(error.message)
+        res.status(404);
+        res.json(error.message);
+        return;
+    }
+    res.json(token);
+})
 //input: username, passwort und type als string
 //output: JSON User/error 404 sorry cant find that
 app.get('/login/:username/:password/:type',function(req,res){

@@ -14,9 +14,9 @@ JsonHandler.initDefault();
 const jwt=require("jsonwebtoken")
 const dotenv= require("dotenv");
 const { setHall } = require('../App/Connectivity/Client');
+const e = require('express');
 dotenv.config();
 process.env.TOKEN_SECRET;
-const expiryTime='1800s'
 //not sure about that
 TOKEN_SECRET=require('crypto').randomBytes(64).toString('hex');
 
@@ -24,7 +24,27 @@ function generateAccessToken(username, role){
     return jwt.sign({username:username, role:role},TOKEN_SECRET,{expiresIn : '1h'});
 }
 
-
+function sanitize(str){
+    return /^[A-Za-z0-9 ,.!?%]*$/.test(str);
+}
+app.use((req,res,next)=>{
+    console.log("checking input")
+    let ret;
+    req.url.split('/').forEach(element=>{
+        if(ret){
+            return;
+        }
+        if(!sanitize(element)){
+            console.log("invalid input detected and rejected: "+element)
+            res.status(666).json("invalid input detected. only insert [A-Za-z0-9 ]*")
+            ret=true;
+        }
+    })
+    if(ret){
+        return;
+    }
+     next()
+})
 app.use('/Customer',(req,res,next)=>{
     
     jwt.verify(req.headers.token,TOKEN_SECRET,(err, re)=>{

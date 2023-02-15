@@ -1,5 +1,5 @@
 const { response } = require("express");
-
+let token="gasp no token here";
 module.exports = {
     hello: function() {
        console.log("worked");
@@ -36,41 +36,51 @@ module.exports = {
     },
     //returns string
     login:function(username,password,type){
-       return get('login/'+username+'/'+password+'/'+type)
-    },
-    setHall:function(hall,username,password){
-        return new Promise((resolve,reject)=>{
-            fetch('http://localhost:3000/setHall/'+username+'/'+password,{
-                method: 'POST',
-                body: JSON.stringify(hall)
-            }).then((response)=>{
-                
-                return response.json();
-               }).then((data)=>{
-                resolve(data)
-               }).catch((err)=>{
-                console.log("some error happened")
-                reject(err);
-               })
+       return new Promise((resolve,reject)=>{
+        fetch("http://localhost:3000/login",{
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify({
+                username: username,
+                password: password,
+                type: type
+            })
+        }).then((data)=>{return data.json()}).then((data)=>{
+            token=data;
+            console.log("token saved " +token.username+token)
+    
+            resolve(data)
+        }).catch((err)=>{
+            reject(err);
         })
+       }) 
     },
-    addSeat: function(username,password,hallID,type,row,number){
-        return get('addSeat/'+username+'/'+password+"/"+hallID+"/"+type+"/"+row+"/"+number)
+    //BIG NONO: dont add presentations in the hall set here. this would destroy the coherence of the ids of all presentations and movies. 
+    // seats are semi okay, as they are mapped severside (technically could do the same with pres and movies, would be significantly less efficieant tho)
+    //hence not only the hall id is returned, but the entire hall object. this way you also have all fresh ids of all seats
+    setHall:function(hall){
+       return get("Manager/setHall/"+JSON.stringify(hall))
     },
-    removeSeat: function(username,password,seatID,hallID){
-        return get("removeSeat/"+username+"/"+password+"/"+seatID+"/"+hallID)
+    updateHall:function(hall){
+        return get("Manager/updateHall"+JSON.stringify(hall))
+    },
+    addSeat: function(hallID,type,row,number){
+        return get('Manager/addSeat/'+hallID+"/"+type+"/"+row+"/"+number)
+    },
+    removeSeat: function(seatID,hallID){
+        return get("Manager/removeSeat/"+seatID+"/"+hallID)
     },
     addUser: function(username,password,type){
         return get("addUser/"+username+"/"+password+"/"+type);
     },
-    removeUser: function(username,password,type,userID){
-        return get("removeUser/"+username+"/"+password+"/"+type+"/"+userID)
+    removeUser: function(type,userID){
+        return get("Customer/removeUser/"+type+"/"+userID)
     },
     getHall: function(hallID){
         return get("getHall/"+hallID);
     },
-    removeHall: function(username,password,hallid){
-        return get("removeHall/"+username+"/"+password+"/"+hallid)
+    removeHall: function(hallid){
+        return get("Manager/removeHall/"+hallid)
     },
     getMovies:function(){
         return get("getMovies");
@@ -78,23 +88,29 @@ module.exports = {
     getMovieByID: function(movieID){
         return get("getMovieByID/"+movieID);
     },
-    removeMovie: function(movieID,username,password){
-        return get("removeMovie/"+username+"/"+password+"/"+movieID)
+    removeMovie: function(movieID){
+        return get("Manager/removeMovie/"+movieID)
     },
-    addMovie: function(username,password,name,duration,minimumAge,description){
-        return get("addMovie/"+username+"/"+password+"/"+name+"/"+duration+"/"+minimumAge+"/"+description)
+    addMovie: function(name,duration,minimumAge,description){
+        return get("Manager/addMovie/"+name+"/"+duration+"/"+minimumAge+"/"+description)
     },
-    addPresentation: function(username,password,movieID,date,hallID){
-        return get("addPresentation/"+username+'/'+password+'/'+movieID+'/'+date+'/'+hallID)
+    updateMovie: function(movie){
+        return get("Manager/updateMovie/"+JSON.stringify(movie))
     },
-    removePresentation: function(username,password,presentationID){
-        return get("removePresentation/"+username+'/'+password+'/'+presentationID);
+    addPresentation: function(movieID,date,hallID){
+        return get("Manager/addPresentation/"+movieID+'/'+date+'/'+hallID)
     },
-    bookTicket: function(username,password,presentationID,seatID){
-        return get("BookTicket/"+username+'/'+password+'/'+presentationID+'/'+seatID)
+    removePresentation: function(presentationID){
+        return get("Manager/removePresentation/"+presentationID);
     },
-    removeTicket: function(username,password,TicketID){
-        return get ("removeTicket/"+username+'/'+password+'/'+TicketID)
+    bookTicket: function(presentationID,seatID){
+        return get("Customer/BookTicket/"+presentationID+'/'+seatID)
+    },
+    removeTicket: function(TicketID){
+        return get("Customer/removeTicket/"+TicketID)
+    },
+    addReview: function(review,stars,movieID){
+        return get("Customer/addReview/"+review+"/"+stars+"/"+movieID);
     }
 
 
@@ -105,13 +121,16 @@ module.exports = {
  function get(args){
     console.log("fetch request with arguments: "+args)
     return new Promise((resolve,reject)=>{
-        fetch('http://localhost:3000/'+args).then((response)=>{
-            return response.json();
+        fetch('http://localhost:3000/'+args,{
+            headers:{
+                token:token
+            }}).then((response)=>{
+         return response.json();
            }).then((data)=>{
             console.log("json received")
            resolve(data);
            }).catch((err)=>{
-            console.log("some error happened")
+            console.log("some error happened with "+args)
             reject(err);
            })
     })

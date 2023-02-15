@@ -1,9 +1,33 @@
 
+const JsonHandler = require('../../Server/JsonHandler');
 const Def = require('../../Server/JsonHandler');
 const Client=require('./Client');
 
-//sample implementations
+Client.login("melly","mellyPW","Customer").then(()=>{
+    Client.addReview("zwei sekunden",3,0).then((data)=>{
+        console.log(data)
+        Client.getMovieByID(0).then((data)=>{
+            console.log(data)
+        })
+    })
+})
 /*
+Client.login("Bodo","BodoPasswort","Manager").then((Data)=>{
+   console.log("sending second req")
+    fetch('http://localhost:3000/testToken/',{
+        headers:{
+            token:Data
+        }
+    }).then((data)=>{
+        console.log(data)
+        return data.json()
+    }).then((data)=>{
+        console.log(data)
+    });
+})
+
+//sample implementations
+
 Client.getCinema().then((data)=>{
    let obj=JSON.parse(data)
     console.log(obj)
@@ -52,7 +76,7 @@ Client.addSeat("Martin","martinpw",0,0,0,0).then((data)=>{
 }).catch((err)=>{
     console.log(err)
 })
-*/
+
 Client.addMovie("Bodo","BodoPasswort","Der Herr der Ringe",180,12,"lotr").then((data)=>{
     console.log("starting movie and ticket tests")
     let movieID=data;
@@ -71,7 +95,7 @@ Client.addMovie("Bodo","BodoPasswort","Der Herr der Ringe",180,12,"lotr").then((
                         console.log(data)
                        console.log(data.code)
                        Client.removeTicket("Martin","martinpw",data.ID).then((data)=>{
-                        console.log(data)
+                        console.log("here"+data)
                        })
                     })
                 })
@@ -92,3 +116,4 @@ Client.addMovie("Bodo","BodoPasswort","Der Herr der Ringe",180,12,"lotr").then((
 
 
 
+*/

@@ -3,6 +3,8 @@
 let express = require('express');
 const app = express();
 app.use(express.json())
+const debugging=true;
+
 const JsonHandler=require('./JsonHandler');
 let fs = require('fs');
 let cors = require('cors');
@@ -10,21 +12,121 @@ const { addSeat, removeSeat, adduser, removeUser, getHall, removeHall, getMovies
 app.use(cors()); // allow all origins -> Access-Control-Allow-Origin: *
 app.use(express.static('public')); // host public folder
 JsonHandler.initDefault();
+const jwt=require("jsonwebtoken")
+const dotenv= require("dotenv");
+const { setHall } = require('../App/Connectivity/Client');
+const e = require('express');
+dotenv.config();
+process.env.TOKEN_SECRET;
+//not sure about that
+TOKEN_SECRET=require('crypto').randomBytes(64).toString('hex');
 
+function generateAccessToken(username, role){
+    return jwt.sign({username:username, role:role},TOKEN_SECRET,{expiresIn : '1h'});
+}
 
-app.get('/getCinemaHall/:ID',function(req,res){
-let ID=req.params.ID;
-
+function sanitize(str){
+    return /^[A-Za-z0-9 ,.!?%]*$/.test(str);
+}
+app.use((req,res,next)=>{
+    console.log("checking input")
+    let ret;
+    req.url.split('/').forEach(element=>{
+        if(ret){
+            return;
+        }
+        if(!sanitize(element)){
+            console.log("invalid input detected and rejected: "+element)
+            if(debugging){
+                res.json("invalid input: "+element)
+            }else{
+                res.status(666).json("invalid input detected. only insert [A-Za-z0-9 ]*")
+            
+            }
+            ret=true;
+        }
+    })
+    if(ret){
+        return;
+    }
+     next()
 })
+app.use('/Customer',(req,res,next)=>{
+    
+    jwt.verify(req.headers.token,TOKEN_SECRET,(err, re)=>{
+      if(err!=null){
+        console.log(err.message)
+        res.status(401).json("Invalid token")
+      }else{
+        let tk=jwt.decode(req.headers.token,TOKEN_SECRET);
+        if(debugging){
+        console.log(tk)
+        console.log(req.path+" from "+tk.username+" as "+tk.role)
+        }
+         if(tk.role!=="Customer"){
+            console.log("wrong type login")
+            res.status(401).json("Invalid type")
+            return;
+        }
+        next() }
+        
+    })
+   
+    });
+
+app.use('/Manager',(req,res,next)=>{
+ 
+    jwt.verify(req.headers.token,TOKEN_SECRET,(err, re)=>{
+      if(err!=null){
+        console.log(err.message)
+        res.status(401).json("Invalid token")
+      }else{ 
+        let tk=jwt.decode(req.headers.token,TOKEN_SECRET);
+       if(debugging){ console.log(tk)
+        console.log(req.path+" from "+tk.username+" as "+tk.role)
+       }
+        if(tk.role!=="Manager"){
+            console.log("wrong type login")
+            res.status(401).json("Invalid type")
+            return;
+        }
+        next() }
+        
+    })
+   
+    });
+
+
 
 app.get('/getCinema',function(req,res){
     console.log("cinema requested")
     res.json(JsonHandler.getCinema());
 })
+app.post('/login',function(req,res){
+    console.log("Logging in")
 
+    const token=generateAccessToken(req.body.username,req.body.type);
+    token.role=req.params.type;
+    if(debugging){console.log("login request from "+req.body.username+" with pw "+req.body.password)
+    }
+    try {
+        let result=JsonHandler.login(req.body.username,req.body.password,req.body.type);
+    } catch (error) {
+        console.log(error.message)
+        res.status(404);
+        res.json(error.message);
+        return;
+    }
+    res.json(token);
+})
 //input: username, passwort und type als string
 //output: JSON User/error 404 sorry cant find that
+/*
 app.get('/login/:username/:password/:type',function(req,res){
+    console.log("Logging in")
+
+    const token=generateAccessToken(req.params.username,req.params.type);
+    token.role=req.params.type;
     console.log("login request from "+req.params.username+" with pw "+req.params.password)
     try {
         let result=JsonHandler.login(req.params.username,req.params.password,req.params.type);
@@ -34,22 +136,58 @@ app.get('/login/:username/:password/:type',function(req,res){
         res.json(error.message);
         return;
     }
-    res.send(JSON.stringify("login successfull"));
+    res.json(token);
 })
+*/
 //todo: ensure correct hallID
-app.post('/setHall/:username/:password',function(req,res){
-    console.log("postrequest sethall")
-    req.body.
-    console.log(hall)
+app.get('/Manager/setHall/:hallstring',function(req,res){
+    try {
+       
+        let response=JsonHandler.addHall(JSON.parse(req.params.hallstring))
+        console.log("response: "+response)
+        res.json(response);
+    } catch (error) {
+        console.log(error.message)
+        res.status(404).json(error.message)
+       }
 })
 
-app.get('/addHall/:username/:password',function(req,res){
-
+app.get('/Manager/updateHall/:hallstring',function(req,res){
+    try {
+       
+        let response=JsonHandler.updateHall(JSON.parse(req.params.hallstring))
+        console.log("response: "+response)
+        res.json(response);
+    } catch (error) {
+        console.log(error.message)
+        res.status(404).json(error.message)
+       }
 })
 
-app.get('/addSeat/:username/:password/:hallID/:type/:row/:number',function(req,res){
-   if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-    console.log("seat add request from "+req.params.username)
+app.get('/Manager/updateMovie/:movieString',function(req,res){
+    try {
+       
+        let response=JsonHandler.updateMovie(JSON.parse(req.params.movieString))
+        console.log("response: "+response)
+        res.json(response);
+    } catch (error) {
+        console.log(error.message)
+        res.status(404).json(error.message)
+       }
+})
+
+app.get('/Customer/addReview/:review/:Sterne/:movieID',function(req,res){
+    try {
+     let response=JsonHandler.addReview(req.params.review,req.params.Sterne,req.params.movieID)
+     console.log("response: "+response)
+     res.json(response);
+ } catch (error) {
+     console.log(error.message)
+     res.status(404).json(error.message)
+    }
+ 
+ })
+app.get('/Manager/addSeat/:hallID/:type/:row/:number',function(req,res){
    try {
     let response=addSeat(req.params.hallID,req.params.type,req.params.row,req.params.number)
     console.log("response: "+response)
@@ -60,10 +198,7 @@ app.get('/addSeat/:username/:password/:hallID/:type/:row/:number',function(req,r
    }
 
 })
-app.get('/removeSeat/:username/:password/:seatID/:hallID',function(req,res){
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-    console.log("seat remove request from "+req.params.username)
- 
+app.get('/Manager/removeSeat/:seatID/:hallID',function(req,res){
     try {
         let response=removeSeat(req.params.hallID,req.params.seatID);
         res.json(response);
@@ -83,10 +218,8 @@ app.get('/addUser/:username/:password/:type',function(req,res){
         res.status(404).json(error.message);
     }
 })
-app.get('/removeUser/:username/:password/:type/:userID',function(req,res){
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-    console.log("user remove request from "+req.params.username)
- 
+app.get('/Customer/removeUser/:type/:userID',function(req,res){
+
     try {
          let response=removeUser(req.params.userID);
          res.json(response);
@@ -96,8 +229,6 @@ app.get('/removeUser/:username/:password/:type/:userID',function(req,res){
  })
 
  app.get('/getHall/:hallID',function(req,res){
-    console.log("get hall request  ")
- 
     try {
          let response=getHall(req.params.hallID);
          res.json(response);
@@ -105,9 +236,7 @@ app.get('/removeUser/:username/:password/:type/:userID',function(req,res){
          res.status(404).json(error.message);
      }
  })
- app.get('/removeHall/:username/:password/:hallID',function(req,res){
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-    console.log("remove hall request from "+req.params.username)
+ app.get('/Manager/removeHall/:hallID',function(req,res){
  
     try {
         let response=removeHall(req.params.hallID);
@@ -127,7 +256,6 @@ app.get('/getMovies',function(req,res){
     }
 })
 app.get('/getMovieByID/:movieID',function(req,res){
-    console.log("get MoviebyID request from ")
     
     try {
         let response=getMovieByID(req.params.movieID);
@@ -136,10 +264,8 @@ app.get('/getMovieByID/:movieID',function(req,res){
         res.status(404).json(error.message);
     }
 })
-app.get('/removeMovie/:username/:password/:movieID',function(req,res){
-    console.log("remove Movie request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-   
+app.get('/Manager/removeMovie/:movieID',function(req,res){
+    
     try {
         let response=removeMovie(req.params.movieID);
         res.json(response);
@@ -147,10 +273,8 @@ app.get('/removeMovie/:username/:password/:movieID',function(req,res){
         res.status(404).json(error.message);
     }
 })
-app.get('/addMovie/:username/:password/:name/:duration/:minimumAge/:description',function(req,res){
-    console.log("remove Movie request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
-   
+app.get('/Manager/addMovie/:name/:duration/:minimumAge/:description',function(req,res){
+  
     try {
         let response=addMovie(req.params.name,req.params.duration,req.params.minimumAge,req.params.description);
         res.json(response);
@@ -158,9 +282,7 @@ app.get('/addMovie/:username/:password/:name/:duration/:minimumAge/:description'
         res.status(404).json(error.message);
     }
 })
-app.get('/addPresentation/:username/:password/:movieID/:date/:hallID',function(req,res){
-    console.log("add Presentation request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
+app.get('/Manager/addPresentation/:movieID/:date/:hallID',function(req,res){
    
     try {
         let response=JsonHandler.addPresentation(req.params.movieID,req.params.date,req.params.hallID)
@@ -169,9 +291,7 @@ app.get('/addPresentation/:username/:password/:movieID/:date/:hallID',function(r
         res.status(404).json(error.message);
     }
 })
-app.get('/removePresentation/:username/:password/:presentationID',function(req,res){
-    console.log("remove Presentation request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Manager",res)==undefined) return; 
+app.get('/Manager/removePresentation/:presentationID',function(req,res){
    
     try {
         let response=JsonHandler.removePresentation(req.params.presentationID)
@@ -180,10 +300,8 @@ app.get('/removePresentation/:username/:password/:presentationID',function(req,r
         res.status(404).json(error.message);
     }
 })
-app.get('/BookTicket/:username/:password/:presentationID/:seatID',function(req,res){
-    console.log("book ticket request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Customer",res)==undefined) return; 
-   
+app.get('/Customer/BookTicket/:presentationID/:seatID',function(req,res){
+  
     try { 
         let userID=JsonHandler.getUserID(req.params.username,"Customer")
         console.log("User found: "+ userID)
@@ -193,35 +311,21 @@ app.get('/BookTicket/:username/:password/:presentationID/:seatID',function(req,r
         res.status(404).json(error.message);
     }
 })
-app.get('/removeTicket/:username/:password/:TicketID',function(req,res){
-    console.log("remove ticket request from "+req.params.username)
-    if(checkLogin(req.params.username,req.params.password,"Customer",res)==undefined) return; 
-   
+app.get('/Customer/removeTicket/:TicketID',function(req,res){
+    
     try { 
         let userID=JsonHandler.getUserID(req.params.username,"Customer")
         let response=JsonHandler.removeTicket(req.params.TicketID,userID);
+        console.log("here. "+response)
         res.json(response);
     } catch (error) {
+        console.log(error.message)
         res.status(404).json(error.message);
     }
 })
 
  
- 
 
-function checkLogin(username,password,type,res){
-    try {
-       let ret= JsonHandler.login(username,password,type);
-       return ret
-    } catch (error) {
-        console.log(error.message)
-        res.status(404).json(error.message);
-    
-    }
-}
-
-
-app.get('')
 
 
 

@@ -36,25 +36,7 @@ module.exports = {
             this.seats = seats;
 
         }
-        //todo remove, replace seat and proper implementation
-        addSeat(seat) {
-            this.seats.push(seat)
-        }
 
-        addPresentations(presentations) {
-            this.presentations = presentations;
-        }
-        addPresentation(Presentation) {
-            this.presentations.push(Presentation);
-        }
-        checkCollision(movie, date) {
-            this.presentations.forEach(element => {
-                if (element.date === date) {
-                    throw new Error("Theres already a booked movie at that time")
-                }
-            });
-            return false;
-        }
     },
     Seat: class Seat {
         //fields: row=int
@@ -102,7 +84,8 @@ module.exports = {
         constructor(name, description, duration, minimumAge) {
             this.ID = movieID++;
             const reviews = new Array(0);
-            reviews.push("Die Hard is a classic action film that combines high-stakes tension, expertly choreographed action scenes, and a healthy dose of humor, making it a must-see for any fan of the genre.")
+            const presentations=new Array(0);
+            this.presentations=presentations;
             this.reviews = reviews;
             this.name = name;
             this.description = description;
@@ -160,7 +143,7 @@ module.exports = {
     addSeat: function (hallID, type, row, seatID) {
         return addSeat(new module.exports.Seat(row, seatID, type), hallID);
     },
-    removeSeat: function (hallID, seatID) {
+    removeSeat: function (hallID, seatID,) {
         return removeSeat(hallID, seatID);
     },
     getCinema: function () {
@@ -182,9 +165,6 @@ module.exports = {
     removeUser: function (userID) {
         return removeUser(userID);
     },
-    addPresentation: function (movie,) {
-
-    },
     login: function (username, password, type) {
         let ret = containsUserimpl(username, password, type);
         if (ret == undefined) throw new Error("no such user found")
@@ -198,8 +178,11 @@ module.exports = {
         return getHall(hallID);
     },
     //todo: talk about parameters
-    addHall: function () {
-
+    addHall: function (hall) {
+            return addHall(hall)
+    },
+    updateHall: function(hall){
+        return updateHall(hall);
     },
     removeHall: function (hallID) {
         return removeHall(hallID);
@@ -215,6 +198,9 @@ module.exports = {
     },
     addMovie: function (name, duration, minimumAge, description) {
         return addMovie(new module.exports.Movie(name, description, duration, minimumAge));
+    },
+    updateMovie:function(movie){
+        return updateMovie(movie);
     },
     addPresentation: function (movieID, date, hallID) {
         return addPresentation(movieID, date, hallID)
@@ -233,6 +219,9 @@ module.exports = {
     },
     getUserID: function(username,type){
         return getUserID(username,type)
+    },
+    addReview: function(review,Sterne, movieID){
+        return addReview(review,Sterne,movieID)
     }
 
 
@@ -288,18 +277,25 @@ function initDefaultData() {
 
     let ima = new module.exports.Cinema(3, 7, 'normal');
     let hall = new module.exports.Hall(10, "luxury", "atmos");
-    hall.addSeat(new module.exports.Seat(1, 0, "replacable"))
+   // hall.addSeat(new module.exports.Seat(1, 0, "replacable"))
+    hall.seats.push(new module.exports.Seat(1,0,"replacable"))
     ima.addHall(hall)
 
     const allschedules = new Array(0);
+    const movies=new Array(0);
     ima.halls.forEach(element => {
-        let pres = new module.exports.Presentation(new module.exports.Movie("die hard", "dying hard", 120, 18), new Date("July 4 1776 12:30"))
+        let mov=new module.exports.Movie("die hard", "dying hard", 120, 18)
+        
+        let pres = new module.exports.Presentation(mov, new Date("July 4 1776 12:30"))
         element.presentations.push(pres);
+        mov.presentations.push(new Date("July 4 1776 12:30"))
+        //todo: add pres to mov for def data
+        movies.push(mov)
         allschedules.push(pres);
     });
     let data = JSON.stringify(ima);
     writeFile(data, "Cinema")
-    writeFile(JSON.stringify(allschedules), "Movies")
+    writeFile(JSON.stringify(movies), "Movies")
 
 }
 function readFileByName(name) {
@@ -347,6 +343,23 @@ function containsUserimpl(username, password, type) {
 //todo
 
 //manager
+function addHall(hall){
+console.log("adding hall")
+hall.ID=hallID++;
+hall.seats.forEach((seat)=>{
+    seat.ID=seatID++;
+})
+
+console.log(hall)
+setHall(hall)
+console.log("hall set")
+return hall;
+
+}
+function updateHall(hall){
+    setHall(hall);
+    return "successfull"
+}
 function addSeat(seat, hallid) {
     console.log("adding seat to hall " + hallid)
     let hall = getHall(hallid);
@@ -523,8 +536,8 @@ function addMovie(movie) {
         let id;
         let name;
         try {
-            id = element.movie.ID;
-            name = element.movie.name;
+            id = element.ID;
+            name = element.name;
         } catch (error) {
 
         }
@@ -536,11 +549,32 @@ function addMovie(movie) {
         }
 
     });
-    let pres = new module.exports.Presentation(movie, new Date(Date()))
-    movies.push(pres);
+    //let pres = new module.exports.Presentation(movie, new Date(Date()))
+    movies.push(movie);
     writeFile(JSON.stringify(movies), "Movies");
     console.log(movie.name + " added to library");
     return movie.ID;
+}
+function updateMovie(movie){
+    let movies=JSON.parse(readFileByName("Movies"))
+    let checker=undefined;
+    let counter=0;
+    console.log("updating movie")
+    movies.forEach((element)=>{
+        if(movie.ID===element.ID){
+            checker=counter;
+        }
+        counter++;
+    })
+    if(checker==undefined){
+        throw new Error("movie not found")
+    }
+    movies[checker]=movie;
+
+
+    writeFile(JSON.stringify(movies),"Movies");
+    console.log("movie successfully updated")
+    return "movie successfully updated"
 }
 function getMovies() {
     return JSON.parse(readFileByName("Movies"));
@@ -554,7 +588,7 @@ function getMovieByID(movieID) {
 
         let temp;
         try {
-            temp = element.movie.ID;
+            temp = element.ID;
         } catch (error) {
 
         }
@@ -566,7 +600,7 @@ function getMovieByID(movieID) {
 
     });
     if (movie == undefined) throw new Error("no such movie found")
-    console.log("Movie found: " + movie.movie.name)
+    console.log("Movie found: " + movie.name)
     return movie;
 }
 function removeMovie(movieID) {
@@ -578,7 +612,7 @@ function removeMovie(movieID) {
     presentations.forEach(pres => {
         let temp;
         try {
-            temp = pres.movie.ID;
+            temp = pres.ID;
         } catch (error) {
 
         }
@@ -591,7 +625,7 @@ function removeMovie(movieID) {
     });
     if (movie == undefined) throw new Error("no such movie found")
     if (index == -1) throw new Error("no such movie found again?=")
-    console.log("Movie removed: " + movie.movie.name)
+    console.log("Movie removed: " + movie.name)
     presentations.splice(index, 1);
     writeFile(JSON.stringify(presentations), "Movies");
     console.log("movies updated")
@@ -600,8 +634,10 @@ function removeMovie(movieID) {
 }
 function addPresentation(movieID, date, hallID) {
     let hall = getHall(hallID);
-    let movie = getMovieByID(movieID).movie;
-
+    let movie = getMovieByID(movieID);
+    
+    
+    //todo: add date to movie
     hall.presentations.forEach(element => {
         //todo: fix date stuff
         if (new Date(element.start) === date) {
@@ -613,6 +649,11 @@ function addPresentation(movieID, date, hallID) {
     hall.presentations.push(pres)
     setHall(hall);
     console.log("Presentation added to hall " + hallID + " with movie " + movie.name + " at time " + date)
+    movie.presentations.push({
+        date:date,
+        id:pres.ID
+    });
+    updateMovie(movie)
     return pres.ID;
 }
 function removePresentation(presentationID) {
@@ -621,11 +662,13 @@ function removePresentation(presentationID) {
     let presIndex = -1;
     let hallcounter = 0;
     let prescounter = 0;
+    let removedate=undefined;
     cinema.halls.forEach(hall => {
         hall.presentations.forEach(pres => {
             if (pres.ID == presentationID) {
                 hallindex = hallcounter;
                 presIndex = prescounter;
+                removedate=pres.date;
             }
             prescounter++;
         });
@@ -633,10 +676,26 @@ function removePresentation(presentationID) {
     });
 
     if (hallindex == -1 || presIndex == -1) throw new Error("no presentation with given ID found");
+    let movie=cinema.halls[hallindex].presentations[presIndex].movie;
+    let dateindex=-1;
+    let datecounter=0;
+    movie.presentations.forEach(element=>{
+        if(element.date===removedate){
+            dateindex=datecounter;
+        }
+        datecounter++;
+    })
+    if(dateindex===-1){
+        console.log("------------------------------wat")
+    }else{
+        movie.presentations.splice(dateindex,1);
+        updateMovie(movie)
+    }
+
     cinema.halls[hallindex].presentations.splice(presIndex, 1);
     setCinemaImpl(JSON.stringify(cinema));
     console.log("presentation successfully removed");
-    return "presentation successfully removed"
+    return true
 
 
 }
@@ -759,8 +818,19 @@ function removeTicket(ticketID, userID) {
 }
 
 //customer
-function addReview(review, movie) {
-
+function addReview(review,Sterne, movieID) {
+    if(Sterne<0||Sterne>5){
+        throw new Error("Sterne sind nur zw 0 und 5 erlaubt")
+    }
+let movie=getMovieByID(movieID)
+movie.reviews.push({
+    review:review,
+    stars:Sterne
+});
+console.log("updating movie")
+updateMovie(movie);
+console.log("review added")
+return "review added"
 }
 function give(arg) {
     return { "argument": +arg }

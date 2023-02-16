@@ -277,7 +277,7 @@ function writeFile(data, filename) {
 }
 function initDefaultUsers() {
     users.push(new module.exports.User("Bodo", "BodoPasswort", manager));
-    users.push(new module.exports.User("Panda", "PandaPW", manager));
+    users.push(new module.exports.User("Panda@icloud.com", "PandaPW", manager));
     users.push(new module.exports.User('melly', "mellyPW", customer));
     users.push(new module.exports.User("Martin", "martinpw", customer));
     let userlist = JSON.stringify(new module.exports.UserList(users));

@@ -7,9 +7,10 @@
                 {
                     "movie": {
                         "ID": 0,
-                        "reviews": [
-                            "Die Hard is a classic action film that combines high-stakes tension, expertly choreographed action scenes, and a healthy dose of humor, making it a must-see for any fan of the genre."
+                        "presentations": [
+                            "1776-07-04T11:24:39.000Z"
                         ],
+                        "reviews": [],
                         "name": "die hard",
                         "description": "dying hard",
                         "duration": 120,
@@ -79,9 +80,10 @@
                 {
                     "movie": {
                         "ID": 1,
-                        "reviews": [
-                            "Die Hard is a classic action film that combines high-stakes tension, expertly choreographed action scenes, and a healthy dose of humor, making it a must-see for any fan of the genre."
+                        "presentations": [
+                            "1776-07-04T11:24:39.000Z"
                         ],
+                        "reviews": [],
                         "name": "die hard",
                         "description": "dying hard",
                         "duration": 120,
@@ -151,9 +153,10 @@
                 {
                     "movie": {
                         "ID": 2,
-                        "reviews": [
-                            "Die Hard is a classic action film that combines high-stakes tension, expertly choreographed action scenes, and a healthy dose of humor, making it a must-see for any fan of the genre."
+                        "presentations": [
+                            "1776-07-04T11:24:39.000Z"
                         ],
+                        "reviews": [],
                         "name": "die hard",
                         "description": "dying hard",
                         "duration": 120,
@@ -223,9 +226,10 @@
                 {
                     "movie": {
                         "ID": 3,
-                        "reviews": [
-                            "Die Hard is a classic action film that combines high-stakes tension, expertly choreographed action scenes, and a healthy dose of humor, making it a must-see for any fan of the genre."
+                        "presentations": [
+                            "1776-07-04T11:24:39.000Z"
                         ],
+                        "reviews": [],
                         "name": "die hard",
                         "description": "dying hard",
                         "duration": 120,

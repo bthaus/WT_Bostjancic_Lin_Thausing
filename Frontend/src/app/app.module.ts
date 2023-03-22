@@ -18,6 +18,21 @@ import { SoonComponent } from './soon/soon.component';
 import { PurchasesComponent } from './purchases/purchases.component';
 import {MatCardModule} from '@angular/material/card';
 import { MovieComponent } from './movie/movie.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthService } from './auth.service';
+import { HttpClientModule } from '@angular/common/http';
+import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
+import { ViewMoviesComponent } from './view-movies/view-movies.component';
+import { DialogComponent } from './dialog/dialog.component';
+import { TheatreManagingComponent } from './theatre-managing/theatre-managing.component';
+import { PresentationManagerComponent } from './presentation-manager/presentation-manager.component';
+import { DialogHallsComponent } from './dialog-halls/dialog-halls.component';
+import { DilogPresentationsComponent } from './dilog-presentations/dilog-presentations.component';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+
 
 
 
@@ -33,6 +48,14 @@ import { MovieComponent } from './movie/movie.component';
     PurchasesComponent,
     LoginComponent,
     MovieComponent,
+    AppComponent,
+    ViewMoviesComponent,
+    DialogComponent,
+    TheatreManagingComponent,
+    PresentationManagerComponent,
+    DialogHallsComponent,
+    DilogPresentationsComponent,
+    LoginComponent,
     
   ],
   imports: [
@@ -48,10 +71,28 @@ import { MovieComponent } from './movie/movie.component';
     MatDialogModule, 
     MatToolbarModule, 
     MatCardModule,
-    
-
+    MatCheckboxModule,
+    HttpClientModule,
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatCheckboxModule
   ],
-  providers: [],
+  providers: [    
+     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorInterceptor, multi:true},
+
+    AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

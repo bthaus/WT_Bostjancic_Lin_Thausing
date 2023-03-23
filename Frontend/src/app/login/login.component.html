@@ -1,26 +1,38 @@
 
   <div class="flex justify-center h-full items-center ">
-  <form class="flex flex-col items-center">
-    <mat-form-field class="self-stretch">
-      <mat-label>Email</mat-label>
-      <input type="email" matInput [formControl]="emailFormControl" [errorStateMatcher]="matcher"
-            placeholder="Ex. pat@example.com">
-      <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+  <form class="flex flex-col items-center" [formGroup]="loginForm">
+    <div class="self-stretch">
+      <mat-label>User</mat-label>
+      <input type="input" placeholder="Username"  formControlName="username">
+      <mat-error *ngIf="loginForm.hasError('input') && !loginForm.hasError('required')">
         Please enter a valid email address
       </mat-error>
-      <mat-error *ngIf="emailFormControl.hasError('required')">
+      <mat-error *ngIf="loginForm.hasError('required')">
         Email is <strong>required</strong>
       </mat-error>
-    </mat-form-field>
+    </div>
 
-    <mat-form-field class="self-stretch">
+
+    <div class="self-stretch">
       <mat-label>Enter your password</mat-label>
-      <input matInput [type]="hide ? 'password' : 'text'">
+      <input matInput [type]="hide ? 'password' : 'text'"  formControlName="password">
+
       <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-    </mat-form-field>
-    <button class="w-40 " mat-raised-button (click)="openDialog('0ms', '0ms')">Login</button>
+
+    </div>
+      <div class="self-stretch">
+      <mat-label>Type</mat-label>
+      <input type="input" name="type" formControlName="type">
+
+      
+      </div>
+  
+    <div class="form-buttons">
+      <button class="button button-primary" (click)="login()">Login</button>
+  </div>
+
   </form>
 
   </div>

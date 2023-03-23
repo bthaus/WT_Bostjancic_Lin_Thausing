@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -22,8 +24,16 @@ export class LoginComponent {
     title = 'Login';
     emailFormControl = new FormControl('', [Validators.required, Validators.email]);
     hide = true
+    loginForm = new FormGroup({
+      username: new FormControl(null,Validators.required),
+      password: new FormControl(null,Validators.required),
+      type: new FormControl(null,Validators.required)
   
-      constructor(public dialog: MatDialog) {}
+    }); 
+  
+      constructor(public dialog: MatDialog,private fb:FormBuilder, 
+        private authService: AuthService, 
+        private router: Router) {}
     
   
     matcher = new MyErrorStateMatcher();
@@ -35,6 +45,28 @@ export class LoginComponent {
       exitAnimationDuration,
     });
   }
+
+  login() {
+    const val = this.loginForm.value;
+    console.log(this.loginForm.value);
+
+    if (val.username && val.password && val.type) {
+        this.authService.login(val.username, val.password,val.type)
+            .subscribe(
+                () => {
+                    console.log("User is logged in");
+                    var type:any = val.type;
+                    if(type == "Customer"){
+                      this.router.navigateByUrl('/movie');
+                    }
+                    else{
+                      this.router.navigateByUrl('/presentation');
+                    }
+                    
+                }
+            );
+    }
+}
 
 }
 

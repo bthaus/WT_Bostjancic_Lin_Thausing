@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
-import {ErrorStateMatcher} from '@angular/material/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { AuthService } from './auth.service';
+import { ApiService } from './services/api-service.service';
 
 
 @Component({
@@ -14,7 +15,8 @@ export class AppComponent {
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   hide = true
 
-    constructor(public dialog: MatDialog) {}
+    constructor(public dialog: MatDialog,private api: ApiService,
+      public authService: AuthService) {}
   
 
 

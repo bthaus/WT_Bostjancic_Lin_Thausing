@@ -25,19 +25,15 @@ export class EditMovieDialogComponent {
       'movieTitle': new FormControl('',[Validators.required]),
       'description':new FormControl('',[Validators.required]),
       'duration': new FormControl('',[Validators.required]),
-      'minAge':new FormControl('',[Validators.required]),
-      'ID':new FormControl('',[Validators.required])
+      'minAge':new FormControl('',[Validators.required])
     });
 
     if(this.editData){
       this.actionBtn = "Update";
-      //this.movieForm.controls['ID'].setValue(this.editData.ID);
-
       this.movieForm.controls['movieTitle'].setValue(this.editData.name);
       this.movieForm.controls['description'].setValue(this.editData.description);
       this.movieForm.controls['duration'].setValue(this.editData.duration);
       this.movieForm.controls['minAge'].setValue(this.editData.minimumAge);
-      this.movieForm.controls['ID'].setValue(this.editData.ID);
     }
   }
 
@@ -45,7 +41,7 @@ export class EditMovieDialogComponent {
     this.updateMovie() 
   }
   updateMovie(){
-    this.api.putMovie(this.movieForm.value,this.editData.id)
+    this.api.putMovie(this.movieForm.value,this.editData)
     .subscribe({
       next:(res)=>{
         console.log("Movie updated");

@@ -58,6 +58,11 @@
             "deleteMovie(row.ID)">
               <mat-icon> delete </mat-icon>
             </button> 
+          
+            <button mat-icon-button color="warn" (click)=
+            "editReviews(row)">
+            <mat-icon> comment</mat-icon>
+          </button>                                          
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

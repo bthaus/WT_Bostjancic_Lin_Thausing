@@ -33,6 +33,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { EditMovieDialogComponent } from './edit-movie-dialog/edit-movie-dialog.component';
+import { DialogManagerCommentsComponent } from './dialog-manager-comments/dialog-manager-comments.component';
 
 
 
@@ -57,7 +58,7 @@ import { EditMovieDialogComponent } from './edit-movie-dialog/edit-movie-dialog.
     DialogHallsComponent,
     DilogPresentationsComponent,
     LoginComponent,
-    EditMovieDialogComponent,
+    EditMovieDialogComponent,DialogManagerCommentsComponent
     
   ],
   imports: [
@@ -88,8 +89,7 @@ import { EditMovieDialogComponent } from './edit-movie-dialog/edit-movie-dialog.
     HttpClientModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule,
-    MatCheckboxModule
+    MatSortModule
   ],
   providers: [    
      {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorInterceptor, multi:true},

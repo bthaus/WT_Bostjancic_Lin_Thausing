@@ -7,6 +7,7 @@ import { interval } from 'rxjs';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
 import { EditMovieDialogComponent } from '../edit-movie-dialog/edit-movie-dialog.component';
+import { DialogManagerCommentsComponent } from '../dialog-manager-comments/dialog-manager-comments.component';
 
 @Component({
   selector: 'app-view-movies',
@@ -43,7 +44,6 @@ export class ViewMoviesComponent {
     .subscribe({
       next:(res)=>{
         this.dataSource = new MatTableDataSource(res);
-        console.log(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
@@ -55,6 +55,15 @@ export class ViewMoviesComponent {
 
   editMovie(row: any){
     this.dialog.open(EditMovieDialogComponent,{
+      width:'30%',
+      data:row
+    }).afterClosed().subscribe(result => {
+      this.getAllMovies();
+    });
+  }
+
+  editReviews(row: any){
+    this.dialog.open(DialogManagerCommentsComponent,{
       width:'30%',
       data:row
     }).afterClosed().subscribe(result => {

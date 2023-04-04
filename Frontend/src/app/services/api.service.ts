@@ -27,15 +27,35 @@ User:any;
 
   }
   //Update: /Manager/updateMovie/:movieString'
-  putMovie(data:any, movieID:number){
+  putMovie(data:any, movieObject:any){
     //id: number, name: string, description:string, duration:number, minAge:number
-    var movieString = JSON.stringify({"id":movieID, "name":data.movieTitle, "description":data.description, 
-    "duration": data.duration, "minimumAge": data.minAge});
-    return this.http.get<any>(this.protocol + this.host +"/Manager" + "/updateMovie/"+ movieString);
+    const headers = { 'content-type': 'application/json'} 
+    
+    movieObject.name = data.movieTitle;
+    movieObject.description = data.description;
+    movieObject.duration = data.duration;
+    movieObject.minimumAge = data.minAge;
+
+    let movieString = JSON.stringify(movieObject);
+
+    return this.http.post<any>(this.protocol + this.host +"/Manager" + "/updateMovie/", movieString, {'headers':headers});
   }
   //Delete
   deleteMovie(movieID:number){
     return this.http.get<any>(this.protocol + this.host + "/Manager" +"/removeMovie/" +movieID);
+  }
+  //Delete comment
+  deleteReview(movieObject:any, indexToDelete:number){
+    //id: number, name: string, description:string, duration:number, minAge:number
+    const headers = { 'content-type': 'application/json'} ;
+
+    if (indexToDelete > -1) { // only splice array when item is found
+      movieObject.reviews.splice(indexToDelete, 1); // 2nd parameter means remove one item only
+    }
+
+    let movieString = JSON.stringify(movieObject);
+
+    return this.http.post<any>(this.protocol + this.host +"/Manager" + "/updateMovie/", movieString, {'headers':headers});
   }
 
   //CinemaHall
@@ -50,8 +70,23 @@ User:any;
 
   //Cinema
   addHall(data: any){
-    return this.http.get<any>(this.protocol + this.host +  "/Manager" + "/addMovie/" + data.movieTitle +"/" +  data.duration+ "/" + data.minAge+ "/"+ data.description);
+    let id = 0;
+    let seats = new Array();
 
+    for(let i = 0; i < data.rowSeats; i++){
+      let row = new Array();
+
+      for(let j = 0; j < data.colSeats; j++){
+        row.push({"ID": id++, "row": i, "number": id+1, "type":"normal"});
+      }
+      seats.push(row);
+    }
+
+    const headers = { 'content-type': 'application/json'} 
+    let numSeats = data.colSeats*data.rowSeats;
+    let hallData = JSON.stringify({"ID":data.id, "features":data.features, "numSeats":data.numSeats, "seats": seats});
+
+    return this.http.post<any>(this.protocol + this.host +  "/Manager" + "/setHall/", hallData, {'headers':headers});
   }
 
   //app.get('/Manager/removeHall/:hallID',function(req,res){

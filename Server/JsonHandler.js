@@ -571,7 +571,6 @@ function updateMovie(movie){
     }
     movies[checker]=movie;
 
-
     writeFile(JSON.stringify(movies),"Movies");
     console.log("movie successfully updated")
     return "movie successfully updated"

@@ -2,41 +2,29 @@
 
 <div mat-dialog-content>
     <form [formGroup] ="theatreForm">
-     
-            
+        
     <mat-form-field appearance="outline">
         <mat-label>
-            Title
+            Features
         </mat-label>
-        <input formControlName="movieTitle" matInput placeholder="Title"/>
+        <input formControlName="features" matInput placeholder="Features"/>
 
     </mat-form-field>
     
     <mat-form-field appearance="outline">
         <mat-label>
-            Description
+            Number of Seats in a Row
         </mat-label>
-        <input formControlName="description" matInput placeholder="Description"/>
-
-        <textarea matInput></textarea>    
+        <input formControlName="colSeats" matInput placeholder="5"/>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label>
-            Duration
+            Number of Seat rows
         </mat-label>
-        <input formControlName="duration" matInput placeholder="Duration"/>
-
-    </mat-form-field>
-    
-    <mat-form-field appearance="outline">
-        <mat-label>
-            Minimum Age
-        </mat-label>
-        <input formControlName="minAge" matInput placeholder="Minimum Age"/>
+        <input formControlName="rowSeats" matInput placeholder="5"/>
     </mat-form-field>
     </form>
-
 </div>
 
 <div mat-dialog-action [align]="'end'">

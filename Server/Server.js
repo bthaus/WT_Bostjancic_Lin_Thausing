@@ -140,10 +140,9 @@ app.get('/login/:username/:password/:type',function(req,res){
 })
 */
 //todo: ensure correct hallID
-app.get('/Manager/setHall/:hallstring',function(req,res){
+app.post('/Manager/setHall',function(req,res){
     try {
-       
-        let response=JsonHandler.addHall(JSON.parse(req.params.hallstring))
+        let response=JsonHandler.addHall(req.body)
         console.log("response: "+response)
         res.json(response);
     } catch (error) {
@@ -164,10 +163,9 @@ app.get('/Manager/updateHall/:hallstring',function(req,res){
        }
 })
 
-app.get('/Manager/updateMovie/:movieString',function(req,res){
+app.post('/Manager/updateMovie/',function(req,res){
     try {
-       
-        let response=JsonHandler.updateMovie(JSON.parse(req.params.movieString))
+        let response=JsonHandler.updateMovie(req.body)
         console.log("response: "+response)
         res.json(response);
     } catch (error) {

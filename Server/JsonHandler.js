@@ -569,7 +569,11 @@ function updateMovie(movie){
     if(checker==undefined){
         throw new Error("movie not found")
     }
-    movies[checker]=movie;
+    //movies[checker]=movie;
+    movies[checker].name = movie.name;
+    movies[checker].duration = movie.duration;
+    movies[checker].minimumAge = movie.minimumAge;
+    movies[checker].description = movie.description;
 
 
     writeFile(JSON.stringify(movies),"Movies");

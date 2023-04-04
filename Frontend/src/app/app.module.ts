@@ -32,6 +32,7 @@ import { DilogPresentationsComponent } from './dilog-presentations/dilog-present
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { EditMovieDialogComponent } from './edit-movie-dialog/edit-movie-dialog.component';
 
 
 
@@ -56,6 +57,7 @@ import { MatTableModule } from '@angular/material/table';
     DialogHallsComponent,
     DilogPresentationsComponent,
     LoginComponent,
+    EditMovieDialogComponent,
     
   ],
   imports: [

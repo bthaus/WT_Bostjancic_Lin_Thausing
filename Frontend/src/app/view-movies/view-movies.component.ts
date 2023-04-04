@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { interval } from 'rxjs';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
+import { EditMovieDialogComponent } from '../edit-movie-dialog/edit-movie-dialog.component';
 
 @Component({
   selector: 'app-view-movies',
@@ -32,6 +33,8 @@ export class ViewMoviesComponent {
   openDialog() {
     this.dialog.open(DialogComponent, {
       width:'26%'
+    }).afterClosed().subscribe(result => {
+      this.getAllMovies();
     });
   }
 
@@ -51,10 +54,12 @@ export class ViewMoviesComponent {
   }
 
   editMovie(row: any){
-    this.dialog.open(DialogComponent,{
+    this.dialog.open(EditMovieDialogComponent,{
       width:'30%',
       data:row
-    })
+    }).afterClosed().subscribe(result => {
+      this.getAllMovies();
+    });
   }
 
 
@@ -62,8 +67,7 @@ export class ViewMoviesComponent {
     this.api.deleteMovie(id)
     .subscribe({
       next:(res)=>{
-        alert("Success");
-
+        this.getAllMovies();
       },
       error:()=>{
         alert("Error while deleting");

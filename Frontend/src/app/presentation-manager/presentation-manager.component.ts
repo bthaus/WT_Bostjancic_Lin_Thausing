@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
+import { DilogPresentationsComponent } from '../dilog-presentations/dilog-presentations.component';
 
 @Component({
   selector: 'app-presentation-manager',
@@ -27,7 +28,7 @@ export class PresentationManagerComponent {
   }
   
   openDialogP() {
-    this.dialog.open(DialogComponent, {
+    this.dialog.open(DilogPresentationsComponent, {
       width:'26%'
     });
   }

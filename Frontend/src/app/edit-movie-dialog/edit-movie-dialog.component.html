@@ -1,0 +1,55 @@
+<h1 mat-dialog-title>Add Movies Form</h1>
+
+<div mat-dialog-content>
+    <form [formGroup] ="movieForm">
+     
+            
+    <mat-form-field appearance="outline">
+        <mat-label>
+            Title
+        </mat-label>
+        <input formControlName="movieTitle" matInput placeholder="Title"/>
+
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline">
+        <mat-label>
+            Description
+        </mat-label>
+        <input formControlName="description" matInput placeholder="Description"/>
+
+        <textarea matInput></textarea>    
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>
+            Duration
+        </mat-label>
+        <input formControlName="duration" matInput placeholder="Duration"/>
+
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline">
+        <mat-label>
+            Minimum Age
+        </mat-label>
+        <input formControlName="minAge" matInput placeholder="Minimum Age"/>
+    </mat-form-field>
+
+    <div hidden="true">
+    <mat-form-field appearance="outline">
+        <mat-label>
+            ID
+        </mat-label>
+        <input formControlName="ID"  matInput placeholder=""/>
+    </mat-form-field>
+    </div>
+    </form>
+
+</div>
+
+<div mat-dialog-action [align]="'end'">
+    <button mat-raised-button color="warn" mat-dialog-close >Close</button>
+    <button class="svnBtn" mat-raised-button color="primary" (click)="addMovie()">{{actionBtn}}</button>
+
+</div>

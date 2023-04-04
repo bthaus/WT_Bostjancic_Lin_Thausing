@@ -22,16 +22,16 @@ export class DialogHallsComponent {
 
   ngOnInit(): void{
     this.theatreForm = this.formBuilder.group({
-      'ID': new FormControl('',[Validators.required]),
       'features':new FormControl('',[Validators.required]),
-      'numSeats': new FormControl('',[Validators.required]),
+      'colSeats': new FormControl('',[Validators.required]),
+      'rowSeats': new FormControl('',[Validators.required])
     });
 
     if(this.editData){
       this.actionBtn = "Update";
-      this.theatreForm.controls['ID'].setValue(this.editData.ID);
       this.theatreForm.controls['features'].setValue(this.editData.features);
-      this.theatreForm.controls['numSeats'].setValue(this.editData.numSeats);
+      this.theatreForm.controls['colSeats'].setValue(this.editData.colSeats);
+      this.theatreForm.controls['rowSeats'].setValue(this.editData.rowSeats);
     }
 
   }

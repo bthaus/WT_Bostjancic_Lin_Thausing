@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
+import { DialogHallsComponent } from '../dialog-halls/dialog-halls.component';
 
 @Component({
   selector: 'app-theatre-managing',
@@ -30,7 +31,7 @@ export class TheatreManagingComponent {
   }
   
   openTheatreDia() {
-    this.dialog.open(DialogComponent, {
+    this.dialog.open(DialogHallsComponent, {
       width:'26%'
     });
   }

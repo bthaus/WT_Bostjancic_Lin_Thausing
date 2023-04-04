@@ -29,9 +29,10 @@ User:any;
   //Update: /Manager/updateMovie/:movieString'
   putMovie(data:any, movieID:number){
     //id: number, name: string, description:string, duration:number, minAge:number
-    var movieString = JSON.stringify({"id":movieID, "name":data.movieTitle, "description":data.description, 
+    const headers = { 'content-type': 'application/json'} 
+    let movieString = JSON.stringify({"ID":data.ID, "name":data.movieTitle, "description":data.description, 
     "duration": data.duration, "minimumAge": data.minAge});
-    return this.http.get<any>(this.protocol + this.host +"/Manager" + "/updateMovie/"+ movieString);
+    return this.http.post<any>(this.protocol + this.host +"/Manager" + "/updateMovie/", movieString, {'headers':headers});
   }
   //Delete
   deleteMovie(movieID:number){
@@ -50,8 +51,23 @@ User:any;
 
   //Cinema
   addHall(data: any){
-    return this.http.get<any>(this.protocol + this.host +  "/Manager" + "/addMovie/" + data.movieTitle +"/" +  data.duration+ "/" + data.minAge+ "/"+ data.description);
+    let id = 0;
+    let seats = new Array();
 
+    for(let i = 0; i < data.rowSeats; i++){
+      let row = new Array();
+
+      for(let j = 0; j < data.colSeats; j++){
+        row.push({"ID": id++, "row": i, "number": id+1, "type":"normal"});
+      }
+      seats.push(row);
+    }
+
+    const headers = { 'content-type': 'application/json'} 
+    let numSeats = data.colSeats*data.rowSeats;
+    let hallData = JSON.stringify({"ID":data.id, "features":data.features, "numSeats":data.numSeats, "seats": seats});
+
+    return this.http.post<any>(this.protocol + this.host +  "/Manager" + "/setHall/", hallData, {'headers':headers});
   }
 
   //app.get('/Manager/removeHall/:hallID',function(req,res){

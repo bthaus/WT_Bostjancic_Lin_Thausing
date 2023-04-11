@@ -34,8 +34,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { EditMovieDialogComponent } from './edit-movie-dialog/edit-movie-dialog.component';
 import { DialogManagerCommentsComponent } from './dialog-manager-comments/dialog-manager-comments.component';
-
-
+import { SeatTheatremanagerDialogComponent } from './seat-theatremanager-dialog/seat-theatremanager-dialog.component';
+import {MatSelectModule} from '@angular/material/select';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { ManagementSellTicketsComponent } from './management-sell-tickets/management-sell-tickets.component';
+import { DialogSellTicketsComponent } from './dialog-sell-tickets/dialog-sell-tickets.component';
 
 
 
@@ -58,8 +63,11 @@ import { DialogManagerCommentsComponent } from './dialog-manager-comments/dialog
     DialogHallsComponent,
     DilogPresentationsComponent,
     LoginComponent,
-    EditMovieDialogComponent,DialogManagerCommentsComponent
-    
+    EditMovieDialogComponent,
+    DialogManagerCommentsComponent, 
+    SeatTheatremanagerDialogComponent, 
+    ManagementSellTicketsComponent, 
+    DialogSellTicketsComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +97,13 @@ import { DialogManagerCommentsComponent } from './dialog-manager-comments/dialog
     HttpClientModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatSelectModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatGridListModule
   ],
   providers: [    
      {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorInterceptor, multi:true},

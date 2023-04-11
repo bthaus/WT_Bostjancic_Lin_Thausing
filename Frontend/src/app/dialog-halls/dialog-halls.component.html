@@ -3,13 +3,13 @@
 <div mat-dialog-content>
     <form [formGroup] ="theatreForm">
         
-    <mat-form-field appearance="outline">
-        <mat-label>
-            Features
-        </mat-label>
-        <input formControlName="features" matInput placeholder="Features"/>
-
-    </mat-form-field>
+        <mat-dialog-content>
+            <mat-form-field>
+                <mat-select placeholder="Theatre Feature" formControlName="features" multiple >
+                    <mat-option ng-selected *ngFor="let feature of allFeatures" value="{{feature}}">{{feature}}</mat-option>
+          </mat-select>
+            </mat-form-field>
+        </mat-dialog-content>
     
     <mat-form-field appearance="outline">
         <mat-label>

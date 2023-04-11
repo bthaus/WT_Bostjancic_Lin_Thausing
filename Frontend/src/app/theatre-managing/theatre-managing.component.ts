@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
 import { DialogHallsComponent } from '../dialog-halls/dialog-halls.component';
+import { SeatTheatremanagerDialogComponent } from '../seat-theatremanager-dialog/seat-theatremanager-dialog.component';
 
 @Component({
   selector: 'app-theatre-managing',
@@ -15,7 +16,7 @@ import { DialogHallsComponent } from '../dialog-halls/dialog-halls.component';
 export class TheatreManagingComponent {
 
   [x: string]: any;
-  displayedColumns: string[] = ['ID', 'feature','num', 'edit'];
+  displayedColumns: string[] = ['ID', 'feature','numSeats', 'edit'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -33,6 +34,8 @@ export class TheatreManagingComponent {
   openTheatreDia() {
     this.dialog.open(DialogHallsComponent, {
       width:'26%'
+    }).afterClosed().subscribe(result => {
+      this.getAllTheatres();
     });
   }
 
@@ -59,17 +62,19 @@ export class TheatreManagingComponent {
   }
 
   editHall(row: any){
-    this.dialog.open(DialogComponent,{
+    this.dialog.open(SeatTheatremanagerDialogComponent,{
       width:'30%',
       data:row
-    })
+    }).afterClosed().subscribe(result => {
+      this.getAllTheatres();
+    });
   }
 
   deleteTheatre(id:number){
     this.api.deleteHall(id)
     .subscribe({
       next:(res)=>{
-        alert("Success");
+        this.getAllTheatres();
       },
       error:()=>{
         alert("Error while deleting..");

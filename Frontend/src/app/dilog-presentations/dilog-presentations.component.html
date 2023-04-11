@@ -6,16 +6,32 @@
 <div mat-dialog-content>
     <form [formGroup] ="presentationForm">
      
-    <mat-form-field appearance="outline">
-        <mat-label>
-            Description
-        </mat-label>
-        <input formControlName="description" matInput placeholder="Description"/>
+        <h4>Movie Selection</h4>
+        <mat-form-field appearance="fill">
+          <mat-label>Movie</mat-label>
+          <mat-select formControlName="movie">
+            <mat-option *ngFor="let movie of Movies" [value]="movie">
+              {{movie.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <h4>Hall Selection</h4>
+        <mat-form-field appearance="fill">
+          <mat-label>Cinema Halls</mat-label>
+          <mat-select  formControlName="hallID">
+            <mat-option *ngFor="let hall of Halls" [value]="hall.ID">
+              {{"Hall ID " + hall.ID + ", seats: " + hall.numSeats +", features: " + hall.features}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-        <textarea matInput></textarea>    
-    </mat-form-field>
+        <h4>Time Selection</h4>
 
-    
+        <mat-form-field appearance="fill">
+            <mat-label>From Date</mat-label>
+            <input matInput type="datetime-local" name="date" formControlName="date">
+        </mat-form-field>
     </form>
 
 </div>

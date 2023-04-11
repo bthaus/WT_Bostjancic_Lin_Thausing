@@ -635,7 +635,10 @@ function addPresentation(movieID, date, hallID) {
     let hall = getHall(hallID);
     let movie = getMovieByID(movieID);
     
-    
+    if(hall.presentations == undefined){
+        hall.presentations = [];
+    }
+
     //todo: add date to movie
     hall.presentations.forEach(element => {
         //todo: fix date stuff

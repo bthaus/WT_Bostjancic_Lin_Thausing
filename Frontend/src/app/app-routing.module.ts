@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { TheatreManagingComponent } from './theatre-managing/theatre-managing.component';
 import { ViewMoviesComponent } from './view-movies/view-movies.component';
 import { PresentationManagerComponent } from './presentation-manager/presentation-manager.component';
+import { ManagementSellTicketsComponent } from './management-sell-tickets/management-sell-tickets.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
     { path: 'theatre', component: TheatreManagingComponent },
     { path: 'movieManagement', component: ViewMoviesComponent },
     { path: 'presentation', component: PresentationManagerComponent },
+    { path: 'sellTickets', component: ManagementSellTicketsComponent }
 
   
 ];

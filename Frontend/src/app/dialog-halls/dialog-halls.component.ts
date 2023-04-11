@@ -13,14 +13,17 @@ export class DialogHallsComponent {
   [x: string]: any;
   theatreForm !: FormGroup;
   actionBtn: string = "Save";
+  allFeatures: string[] | undefined;
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(private formBuilder: FormBuilder,_formBuilder:FormBuilder,
     private api: ApiService,
     @Inject(MAT_DIALOG_DATA) public editData: any,
     private dialogRef: MatDialogRef<DialogComponent>,
     ){}
 
   ngOnInit(): void{
+
+    this.allFeatures =  ['3d', '4d', 'atmos', 'hdr', '4k'];
     this.theatreForm = this.formBuilder.group({
       'features':new FormControl('',[Validators.required]),
       'colSeats': new FormControl('',[Validators.required]),
@@ -42,7 +45,7 @@ export class DialogHallsComponent {
         this.api.addHall(this.theatreForm.value)
         .subscribe({
           next:(res)=>{
-            alert("Theatre added");
+            this.dialogRef.close('added');
           },
           error:()=>{
             alert("Theatre could not be added.")

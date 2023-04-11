@@ -6,11 +6,13 @@ import { Data } from '@angular/router';
   providedIn: 'root'
 })
 export class ApiService {
-
  protocol = "http://";
  host= "localhost:3000";
 
-User:any;
+ login(username: string, password:string, type:string) {
+  localStorage.setItem("username", username);
+  return this.http.post<any>(this.protocol + this.host + '/login', {"username":username, "password":password, "type":type})
+}
 
 
   constructor(private http: HttpClient) { }
@@ -74,19 +76,71 @@ User:any;
     let seats = new Array();
 
     for(let i = 0; i < data.rowSeats; i++){
-      let row = new Array();
 
       for(let j = 0; j < data.colSeats; j++){
-        row.push({"ID": id++, "row": i, "number": id+1, "type":"normal"});
+        seats.push({"ID": id++, "row": i, "number": id, "type":"normal"});
       }
-      seats.push(row);
     }
 
     const headers = { 'content-type': 'application/json'} 
     let numSeats = data.colSeats*data.rowSeats;
-    let hallData = JSON.stringify({"ID":data.id, "features":data.features, "numSeats":data.numSeats, "seats": seats});
+    let hallData = JSON.stringify({"ID":data.id, "features":data.features, "numSeats":numSeats, "seats": seats});
 
     return this.http.post<any>(this.protocol + this.host +  "/Manager" + "/setHall/", hallData, {'headers':headers});
+  }
+  addFeature(hallObject:any, feature:string){
+    if(!hallObject.features.includes(feature)){
+      if(hallObject.features.length > 0){
+        hallObject.features += ", " + feature;
+      }else{
+        hallObject.features += feature;
+      }
+    }
+
+    return this.updateHall(hallObject);
+  }
+  removeFeature(hallObject:any, feature:string){
+    if(hallObject.features.includes(feature)){
+      if(hallObject.features.includes(feature + ", ")){
+        hallObject.features = hallObject.features.replace(feature + ", ", '');
+      }else if(hallObject.features.includes(", "+ feature)){
+        hallObject.features = hallObject.features.replace(", " + feature, '');
+      }
+      else{
+        hallObject.features = hallObject.features.replace(feature, '');
+      }
+    }
+
+    return this.updateHall(hallObject);
+  }
+  updateSeatType(hallObject:any, id:number, type:string){
+    let index = this.findSeatIndex(hallObject, id);
+
+    if(index != -1){
+      hallObject.seats[index] = type;
+    }
+
+    return this.updateHall(hallObject);
+  }
+
+  findSeatIndex(hallObject:any, id:number){
+    let seat:any;
+    let index = 0;
+
+    for(seat in hallObject.seats){
+      if(seat.ID == id){
+        return index;
+      }
+
+      index++;
+    }
+
+    return -1;
+  }
+
+  updateHall(hallObject:any){
+    const headers = { 'content-type': 'application/json'} 
+    return this.http.post<any>(this.protocol + this.host +  "/Manager" + '/updateHall', hallObject, {'headers':headers});
   }
 
   //app.get('/Manager/removeHall/:hallID',function(req,res){
@@ -98,12 +152,28 @@ User:any;
 
   //Presentation
   addPresentation(data:any){
-    return this.http.get<any>(this.protocol + this.host + "/Manager" +"/addPresentation/" + data.movieID+"/"+data.date+"/"+data.hallID );
+    const headers = { 'content-type': 'application/json'} ;
+    let request = {"movieID": data.movie.ID, "date":data.date, "hallID": data.hallID}
+    return this.http.post<any>(this.protocol + this.host + "/Manager" +"/addPresentation/", JSON.stringify(request), {'headers':headers} );
   }
 
 //Delete Presentation
   deletePresentation(id:number){
     return this.http.get<any>(this.protocol + this.host + "/Manager" + "/removePresentation/" + id );
+  }
+
+  deleteTicketManager(id:number){
+    let username = localStorage.getItem("username");
+    return this.http.get<any>(this.protocol + this.host + "/Manager" + "/removeTicket/" + username + "/" + id );
+  }
+
+  sellTicket(presentationID:number, seatID:number){
+    let username = localStorage.getItem("username");
+    return this.http.get<any>(this.protocol + this.host + "/Manager" + "/sellTicket/" + username + "/" + presentationID + "/" + seatID);
+  }
+
+  removeTicket(ticketID:number){
+    return this.http.get<any>(this.protocol + this.host + "/Manager" + "/removeTicket/" + ticketID);
   }
 
  ///Manager/addPresentation/:movieID/:date/:hallID'

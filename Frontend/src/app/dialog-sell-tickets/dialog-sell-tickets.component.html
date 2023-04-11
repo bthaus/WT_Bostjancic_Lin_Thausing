@@ -1,0 +1,44 @@
+<h1 mat-dialog-title>Add Presentation</h1>
+
+<div mat-dialog-content>
+    <form [formGroup] ="ticketForm">
+     
+        <h4>Movie Selection</h4>
+        <mat-form-field appearance="fill">
+          <mat-label>Movie</mat-label>
+          <mat-select formControlName="movieID">
+            <mat-option *ngFor="let movie of Movies" [value]="movie.ID" (click)="getPresentations(movie)">
+              {{movie.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <h4>Presentation Selection</h4>
+        <mat-form-field appearance="fill">
+            <mat-label>Movie</mat-label>
+            <mat-select formControlName="presentationID">
+              <mat-option *ngFor="let presentation of presentations" [value]="presentation" (click)="getSeats(presentation.hallID, presentation.ID)">
+                {{"Hall ID " + presentation.hallID + " " + getDate(presentation.start)}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+
+    <h4>Seat Selection</h4>
+    <mat-form-field appearance="fill">
+        <mat-label>Movie</mat-label>
+        <mat-select formControlName="seatID" >
+          <mat-option *ngFor="let seat of seats" [value]="seat.ID" (click)="calculatePrice(seat.type, seat.row)">
+            {{"Row: " + seat.row + ",  Number: " + seat.number + ", Type: " + seat.type}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+
+    <h2>Price: {{totalPrice}}€</h2>
+</div>
+
+<div mat-dialog-action [align]="'end'">
+    <button mat-raised-button color="warn" mat-dialog-close >Close</button>
+    <button class="svnBtn" mat-raised-button color="primary" (click)="sellTicket()">{{actionBtn}}</button>
+</div>

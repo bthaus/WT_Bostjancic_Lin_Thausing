@@ -14,7 +14,7 @@ import { DilogPresentationsComponent } from '../dilog-presentations/dilog-presen
 })
 export class PresentationManagerComponent {
   [x: string]: any;
-  displayedColumns: string[] = ['MovieID', 'MovieTitle','Date', 'HallID', 'edit'];
+  displayedColumns: string[] = ['ID', 'MovieTitle','Date', 'HallID', 'edit'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -30,6 +30,8 @@ export class PresentationManagerComponent {
   openDialogP() {
     this.dialog.open(DilogPresentationsComponent, {
       width:'26%'
+    }).afterClosed().subscribe(result => {
+      this.getAllPresentation();
     });
   }
 
@@ -41,14 +43,16 @@ export class PresentationManagerComponent {
         var presentations = new Array();
 
         for(let i = 0; i < obj.halls.length; i++){
-          for(let j = 0; j < obj.halls[i].presentations.length; j++){
-            presentations.push(obj.halls[i].presentations[j]);
+          if(obj.halls[i].presentations != undefined){
+            for(let j = 0; j < obj.halls[i].presentations.length; j++){
+              presentations.push({"ID": obj.halls[i].ID, "presentation": obj.halls[i].presentations[j]});
+            }
           }
         }
 
 
         this.dataSource = new MatTableDataSource(presentations);
-        //console.log(res);
+        //console.log(JSON.stringify(presentations));
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
@@ -56,6 +60,10 @@ export class PresentationManagerComponent {
         alert("Error while fetching the Records.")
       }
     })
+  }
+
+  getDate(dateString:string){
+    return new Date(dateString).toLocaleString();
   }
 
   getAllMoviesPresentation(){
@@ -78,6 +86,8 @@ export class PresentationManagerComponent {
     this.dialog.open(DialogComponent,{
       width:'30%',
       data:row
+    }).afterClosed().subscribe(result => {
+      this.getAllPresentation();
     })
   }
 
@@ -86,8 +96,7 @@ export class PresentationManagerComponent {
     this.api.deletePresentation(id)
     .subscribe({
       next:(res)=>{
-        alert("Success");
-
+        this.getAllPresentation();
       },
       error:()=>{
         alert("Error while delete");

@@ -151,10 +151,9 @@ app.post('/Manager/setHall',function(req,res){
        }
 })
 
-app.get('/Manager/updateHall/:hallstring',function(req,res){
+app.post('/Manager/updateHall',function(req,res){
     try {
-       
-        let response=JsonHandler.updateHall(JSON.parse(req.params.hallstring))
+        let response=JsonHandler.updateHall(req.body)
         console.log("response: "+response)
         res.json(response);
     } catch (error) {
@@ -280,10 +279,10 @@ app.get('/Manager/addMovie/:name/:duration/:minimumAge/:description',function(re
         res.status(404).json(error.message);
     }
 })
-app.get('/Manager/addPresentation/:movieID/:date/:hallID',function(req,res){
+app.post('/Manager/addPresentation',function(req,res){
    
     try {
-        let response=JsonHandler.addPresentation(req.params.movieID,req.params.date,req.params.hallID)
+        let response=JsonHandler.addPresentation(req.body.movieID,req.body.date,req.body.hallID)
         res.json(response);
     } catch (error) {
         res.status(404).json(error.message);
@@ -298,7 +297,7 @@ app.get('/Manager/removePresentation/:presentationID',function(req,res){
         res.status(404).json(error.message);
     }
 })
-app.get('/Customer/BookTicket/:presentationID/:seatID',function(req,res){
+app.get('/Customer/BookTicket/:username/:presentationID/:seatID',function(req,res){
   
     try { 
         let userID=JsonHandler.getUserID(req.params.username,"Customer")
@@ -309,7 +308,7 @@ app.get('/Customer/BookTicket/:presentationID/:seatID',function(req,res){
         res.status(404).json(error.message);
     }
 })
-app.get('/Customer/removeTicket/:TicketID',function(req,res){
+app.get('/Customer/removeTicket/:username/:TicketID',function(req,res){
     
     try { 
         let userID=JsonHandler.getUserID(req.params.username,"Customer")
@@ -322,9 +321,29 @@ app.get('/Customer/removeTicket/:TicketID',function(req,res){
     }
 })
 
- 
-
-
+app.get('/Manager/sellTicket/:username/:presentationID/:seatID',function(req,res){
+  
+    try { 
+        let userID=JsonHandler.getUserID(req.params.username,"Manager")
+        console.log("User found: "+ userID)
+        let response=JsonHandler.boockTicket(userID,req.params.presentationID,req.params.seatID)
+        res.json(response);
+    } catch (error) {
+        res.status(404).json(error.message);
+    }
+})
+app.get('/Manager/removeTicket/:username/:TicketID',function(req,res){
+    
+    try { 
+        let userID=JsonHandler.getUserID(req.params.username,"Manager")
+        let response=JsonHandler.removeTicket(req.params.TicketID,userID);
+        console.log("here. "+response)
+        res.json(response);
+    } catch (error) {
+        console.log(error.message)
+        res.status(404).json(error.message);
+    }
+})
 
 
 let port = 3000;

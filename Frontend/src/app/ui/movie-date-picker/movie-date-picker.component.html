@@ -1,0 +1,6 @@
+<div class="picker">
+    <h1>Select a time</h1>
+    <div *ngFor="let date of dates" class="date">
+        <p (click)="dateSet(date)">{{date | date:'dd.MM.yyyy'}} <strong>{{date | date:'HH:mm'}}</strong></p>
+    </div>
+</div>

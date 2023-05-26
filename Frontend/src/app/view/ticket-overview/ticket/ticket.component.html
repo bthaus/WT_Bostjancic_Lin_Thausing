@@ -1,0 +1,13 @@
+<div class="ticket" *ngIf="ticket">
+    <h1>{{ticket.movieName}}</h1>
+    <div class="row">
+        <span class="movie-info">Hall - <strong>{{ticket.hall}}&nbsp;&nbsp;</strong> {{ticket.presentation | date:
+            'dd.MM HH:mm'}}&nbsp;&nbsp;
+            seats: {{getSeatsASstring(ticket.seats)}}</span>
+        <button mat-raised-button color="warn" (click)="showQRCode(ticket)" class="viewQR"></button>
+        <a *ngIf="checkIfCancable(ticket.deadline); else notCancable" class="cancel-ticket"
+            (click)="cancelTicket(ticket)"><mat-icon>cancel</mat-icon></a>
+        <ng-template #notCancable><mat-icon class="notcancable">cancel</mat-icon></ng-template>
+    </div>
+    <mat-divider></mat-divider>
+</div>

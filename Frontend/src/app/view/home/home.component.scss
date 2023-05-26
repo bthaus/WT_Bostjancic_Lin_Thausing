@@ -1,0 +1,26 @@
+div.welcome {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+
+    h1 {
+        font-size: xx-large;
+    }
+
+    h3 {
+        color: #2f2f2f;
+    }
+}
+
+div.start {
+    position: relative;
+    transform: scale(3);
+    color: #fff9a8e1;
+    margin: 0;
+}
+
+div.start:hover {
+    cursor: pointer;
+}

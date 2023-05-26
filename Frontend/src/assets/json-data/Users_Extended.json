@@ -1,0 +1,136 @@
+{
+    "userlist": [
+        {
+            "ID": 0,
+            "username": "Bodo",
+            "password": "BodoPasswort",
+            "type": "Manager",
+            "tickets": []
+        },
+        {
+            "ID": 1,
+            "username": "Panda@icloud.com",
+            "password": "PandaPW",
+            "type": "Manager",
+            "tickets": []
+        },
+        {
+            "ID": 2,
+            "username": "melly",
+            "password": "mellyPW",
+            "type": "Customer",
+            "tickets": [
+                {
+                    "movieID": 1,
+                    "movieName": "Movie 1",
+                    "deadline": "1776-07-04T11:24:39.000Z",
+                    "presentation": "1776-07-04T11:24:39.000Z",
+                    "hall": 1,
+                    "seats": [
+                        {
+                            "row": 3,
+                            "column": 3
+                        },
+                        {
+                            "row": 3,
+                            "column": 4
+                        }
+                    ]
+                },
+                {
+                    "movieID": 2,
+                    "movieName": "Movie 2",
+                    "deadline": "1776-07-04T11:24:39.000Z",
+                    "presentation": "1776-07-04T11:24:39.000Z",
+                    "hall": 2,
+                    "seats": [
+                        {
+                            "row": 2,
+                            "column": 4
+                        },
+                        {
+                            "row": 2,
+                            "column": 5
+                        }
+                    ]
+                },
+                {
+                    "movieID": 3,
+                    "movieName": "Movie 3",
+                    "deadline": "1776-07-04T11:24:39.000Z",
+                    "presentation": "1776-07-04T11:24:39.000Z",
+                    "hall": 3,
+                    "seats": [
+                        {
+                            "row": 1,
+                            "column": 4
+                        },
+                        {
+                            "row": 1,
+                            "column": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "ID": 3,
+            "username": "a",
+            "password": "a",
+            "type": "Customer",
+            "tickets": [
+                {
+                    "movieID": 1,
+                    "movieName": "Movie 1",
+                    "deadline": "2023-07-04T11:24:39.000Z",
+                    "presentation": "1776-07-04T11:24:39.000Z",
+                    "hall": 1,
+                    "seats": [
+                        {
+                            "row": 3,
+                            "column": 3
+                        },
+                        {
+                            "row": 3,
+                            "column": 4
+                        }
+                    ]
+                },
+                {
+                    "movieID": 2,
+                    "movieName": "Movie 2",
+                    "deadline": "2023-04-30T11:24:39.000Z",
+                    "presentation": "1776-07-04T11:24:39.000Z",
+                    "hall": 2,
+                    "seats": [
+                        {
+                            "row": 2,
+                            "column": 4
+                        },
+                        {
+                            "row": 2,
+                            "column": 5
+                        }
+                    ]
+                },
+                {
+                    "movieID": 3,
+                    "movieName": "Movie 3",
+                    "deadline": "2023-03-04T11:24:39.000Z",
+                    "presentation": "1776-07-04T11:24:39.000Z",
+                    "hall": 3,
+                    "seats": [
+                        {
+                            "row": 1,
+                            "column": 4
+                        },
+                        {
+                            "row": 1,
+                            "column": 3
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

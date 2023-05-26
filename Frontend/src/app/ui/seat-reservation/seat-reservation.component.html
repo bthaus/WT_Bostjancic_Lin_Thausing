@@ -1,0 +1,22 @@
+<div class="hall" *ngIf="!ticketsBought; else redirecting">
+    <div class="info" *ngIf="reservationData">
+        <h1>Movie Hall {{reservationData.hallId}}</h1>
+        <p><strong>{{reservationData.date | date:'dd.MM.yyyy HH:mm'}}</strong></p>
+    </div>
+    <div class="row" *ngFor="let i of getRows()">
+        <span class="row-number">{{i}}{{(i<=9?"&nbsp;&nbsp;&nbsp;": "&nbsp;" )}}</span>
+                <span *ngIf=" i<10" style="white-space:pre;"> </span>
+                <label class="checkbox-button" *ngFor="let j of getColumn(i)">
+                    <input type="checkbox" class="checkbox-button__input" id="{{i}}-{{j}}" name="{{i}}-{{j}}"
+                        (change)=testEvent($event)>
+                    <span class="checkbox-button__control"></span>
+                </label>
+    </div>
+    <div class="btn">
+        <button mat-raised-button color="warn" (click)="buyTickets()" [disabled]="selectedSeats === ''">Buy
+            Ticket{{(true)?'s':''}}</button>
+    </div>
+</div>
+<ng-template #redirecting>
+    <h1 class="loading">Success! Redirecting to your tickets shortly</h1>
+</ng-template>

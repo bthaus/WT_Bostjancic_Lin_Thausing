@@ -1,0 +1,17 @@
+<mat-card class="example-card" *ngIf="film">
+    <mat-card-header>
+        <mat-card-title>{{film.name}}</mat-card-title>
+        <mat-card-subtitle class="subtitle-withIcon"><mat-icon
+                class="icon-display">access_time</mat-icon><strong>{{film.duration}}</strong>min</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image src="assets/pewpew.png" alt="PewPew" class="Pew">
+    <mat-card-content>
+        <p>
+            {{film.description}}
+        </p>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button (click)="openReviews(film.id)">Reviews</button>
+        <button mat-button (click)="openReviewEditor(film.id)">Write Review</button>
+    </mat-card-actions>
+</mat-card>

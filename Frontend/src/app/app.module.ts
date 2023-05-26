@@ -2,99 +2,82 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent, } from './app.component';
+import { AppComponent } from './app.component';
+import { NavbarComponent } from './ui/navbar/navbar.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatInputModule} from '@angular/material/input'; 
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field'; 
-import {MatIconModule} from '@angular/material/icon'; 
-import {matDialogAnimations, MatDialogModule} from '@angular/material/dialog'; 
-import {MatToolbarModule} from '@angular/material/toolbar';
-import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
-import { ProgramComponent } from './program/program.component';
-import { SoonComponent } from './soon/soon.component';
-import { PurchasesComponent } from './purchases/purchases.component';
-import {MatCardModule} from '@angular/material/card';
-import { MovieComponent } from './movie/movie.component';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthService } from './auth.service';
+import { MatButtonModule } from '@angular/material/button';
+import { FilmCardComponent } from './ui/film-card/film-card.component';
+import { ProgramComponent } from './view/program/program.component';
+import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
-import { ViewMoviesComponent } from './view-movies/view-movies.component';
-import { DialogComponent } from './dialog/dialog.component';
-import { TheatreManagingComponent } from './theatre-managing/theatre-managing.component';
-import { PresentationManagerComponent } from './presentation-manager/presentation-manager.component';
-import { DialogHallsComponent } from './dialog-halls/dialog-halls.component';
-import { DilogPresentationsComponent } from './dilog-presentations/dilog-presentations.component';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { HomeComponent } from './view/home/home.component';
+import { BookingsComponent } from './view/booking/bookings/bookings.component';
+import { MatIconModule } from '@angular/material/icon';
+import { LoginComponent } from './view/login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { ErrorComponent } from './view/error/error.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SeatReservationComponent } from './ui/seat-reservation/seat-reservation.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MovieTableComponent } from './ui/movie-table/movie-table.component';
 import { MatTableModule } from '@angular/material/table';
-import { EditMovieDialogComponent } from './edit-movie-dialog/edit-movie-dialog.component';
-import { DialogManagerCommentsComponent } from './dialog-manager-comments/dialog-manager-comments.component';
-
-
-
-
-
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MovieDatePickerComponent } from './ui/movie-date-picker/movie-date-picker.component';
+import { TicketOverviewComponent } from './view/ticket-overview/ticket-overview.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ReviewDialogComponent } from './ui/film-card/review-dialog/review-dialog.component';
+import { ReviewEditorDialogComponent } from './ui/film-card/review-editor-dialog/review-editor-dialog.component';
+import { StarRatingModule } from 'angular-star-rating';
+import { QRCodeModule } from 'angularx-qrcode';
+import { TicketComponent } from './view/ticket-overview/ticket/ticket.component';
+import { TicketQrCodeDialogComponent } from './view/ticket-overview/ticket/ticket-qr-code-dialog/ticket-qr-code-dialog.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
   declarations: [
-    AppComponent, 
-    HomeComponent,
-    ProgramComponent,
-    SoonComponent,
-    PurchasesComponent,
-    LoginComponent,
-    MovieComponent,
     AppComponent,
-    ViewMoviesComponent,
-    DialogComponent,
-    TheatreManagingComponent,
-    PresentationManagerComponent,
-    DialogHallsComponent,
-    DilogPresentationsComponent,
+    NavbarComponent,
+    FilmCardComponent,
+    ProgramComponent,
+    HomeComponent,
+    BookingsComponent,
     LoginComponent,
-    EditMovieDialogComponent,DialogManagerCommentsComponent
-    
+    ErrorComponent,
+    SeatReservationComponent,
+    MovieTableComponent,
+    MovieDatePickerComponent,
+    TicketOverviewComponent,
+    ReviewDialogComponent,
+    ReviewEditorDialogComponent,
+    TicketComponent,
+    TicketQrCodeDialogComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule, 
-    MatInputModule, 
-    FormsModule, 
-    ReactiveFormsModule, 
-    MatButtonModule, 
-    MatFormFieldModule, 
-    MatIconModule, 
-    MatDialogModule, 
-    MatToolbarModule, 
-    MatCardModule,
-    MatCheckboxModule,
-    HttpClientModule,
-    BrowserModule,
-    AppRoutingModule,
+    MatToolbarModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    MatCardModule,
+    HttpClientModule,
     MatIconModule,
-    MatToolbarModule,
-    MatDialogModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    ReactiveFormsModule,
-    HttpClientModule,
+    MatCheckboxModule,
+    MatSelectModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatDialogModule,
+    StarRatingModule.forRoot(),
+    QRCodeModule,
+    MatDividerModule
   ],
-  providers: [    
-     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorInterceptor, multi:true},
-
-    AuthService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

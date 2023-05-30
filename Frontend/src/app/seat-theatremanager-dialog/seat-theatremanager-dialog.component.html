@@ -1,6 +1,8 @@
-<h1>Edit Theatre</h1>
-<h2>Features</h2>
-<section class="example-section" [formGroup]="features">
+<h1 mat-dialog-title>Edit Theatre</h1>
+
+<div mat-dialog-content>
+  <h2 mat-dialog-title>Features</h2>
+  <section class="example-section" [formGroup]="features">
     <h4>Select Theatre Feature:</h4>
         <p><mat-checkbox formControlName="threed" (change)="updateFeature($event.checked, '3d')">3D</mat-checkbox></p>
         <p><mat-checkbox formControlName="fourd" (change)="updateFeature($event.checked, '4d')">4D</mat-checkbox></p>
@@ -10,16 +12,9 @@
 
 
 </section>
-<h2>Seats</h2>
+<h2 mat-dialog-title>Seats</h2>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-   
-
-
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
-  
-    <!-- Position Column -->
     <ng-container matColumnDef="ID">
       <th mat-header-cell *matHeaderCellDef>ID</th>
       <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
@@ -50,3 +45,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+</div>
+<div mat-dialog-action [align]="'end'">
+  <button mat-raised-button color="warn" mat-dialog-close >Close</button>
+</div>

@@ -1,17 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Data } from '@angular/router';
+import { Observable, map, of } from 'rxjs';
+import { Films } from 'src/assets/json-objects/IFilm';
+import { Seats } from 'src/assets/json-objects/IHall';
+import { Review } from 'src/assets/json-objects/IReviews';
+import { Ticket, Tickets, User, Users } from 'src/assets/json-objects/IUsers';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+  [x: string]: any;
  protocol = "http://";
  host= "localhost:3000";
 
- login(username: string, password:string, type:string) {
-  localStorage.setItem("username", username);
-  return this.http.post<any>(this.protocol + this.host + '/login', {"username":username, "password":password, "type":type})
+ login(username: string, password:string) {
+  return this.http.post<any>(this.protocol + this.host + '/login', {"username":username, "password":password})
 }
 
 
@@ -176,50 +181,56 @@ export class ApiService {
     return this.http.get<any>(this.protocol + this.host + "/Manager" + "/removeTicket/" + ticketID);
   }
 
- ///Manager/addPresentation/:movieID/:date/:hallID'
+  //M Server
 
-/*
-  addHall(data: any){
-    return this.http.get(this.protocol + this.host + "/addMovie/");
+  
+  
+  public getDatesForMovieInHalls(id: number): Observable<{ hall: number, dates: Date[] }> {
+   
+    let dates: Date[] = [new Date("2015-03-25T12:00:00Z"), new Date("2015-03-25T13:50:00Z"), new Date("2015-03-25T15:40:00Z"), new Date("2015-03-25T17:30:00Z")];
+    let observable: Observable<{ hall: number, dates: Date[] }> = of({ hall: 1, dates: dates });
+    return observable;
   }
-  //
+
+  public getSeatsForHallById(hallID: number): Observable<Seats> {
+    let observable: Observable<Seats> = this['getJSON']("Seats.json");
+    return observable;
+  }
+
+  public getReviewsByMovieId(movieID: number): Observable<Review[]> {
+    let observable: Observable<Review[]> = this['getJSON']("Reviews.json");
+    observable.pipe(map((reviews: Review[]) => {
+      return reviews.filter((review: Review) => review.movieID === movieID);
+    }));
+    return observable;
+  }
+
+  public getPurchasedTicketsByUsername(Username: string): Observable<Tickets | undefined> {
+    this['getJSON']("Users_Extended.json").subscribe({ next: (users: any) => console.log(users) });
+    let user: Observable<User | undefined> = this['getJSON']("Users_Extended.json").pipe(map((users: Users) => {
+      return users.userlist.filter((user: User) => user.username === Username);
+    })).pipe(map((user: User[]) => {
+      return user.pop();
+    }));
+    let tickets: Observable<Tickets | undefined> = user.pipe(map(user => user?.tickets));
+    return tickets;
+  }
+
  
-//app.get('/Manager/removeHall/:hallID',function(req,res){
-  //Call remove CinemaHall
-  deleteHall(cinemaID: number){
-    return this.http.get<any>(this.protocol + this.host + "/removeHall/"  + this.username+ "/"+ this.passw+"/" +cinemaID);
+
+  public postTickets(ticketInfo: { hallID: number; movieID: number; seats: string; user: string; }) {
+    //TODO: post user booking
+    console.error("Not implemented yet! postTickets()");
+
+  }
+  postReview(movieID: number, reviewText: string, stars: number, Username: string) {
+    //TODO: post review
+    console.error("Not implemented yet! postReview()");
+  }
+  postCancelTicket(ticket: Ticket) {
+    throw new Error('Method not implemented.');
   }
 
-  //Calls for CinemaSeats
-  addSeat(data: any){
-    return this.http.get(this.protocol + this.host + "/addSeat/" + this.username+ "/"+ this.passw+ "/" + data.hallID+ "/"+ data.type+ "/" + data.row+"/"+ data.number);
-  }
-
-  removeSeats(seatID: number, hallID: number){
-    return this.http.get<any>(this.protocol + this.host + "/removeSeat/"  + this.username+ "/"+ this.passw+"/" + seatID + "/" + hallID);
-  }
-
-  //Presentation
-    addPresentation(data:any){
-      return this.http.get<any>(this.protocol + this.host + "/Manager" +"/addPresentation/" + data.movieID+"/"+data.date+"/"+data.hallID );
-    }
-//app.get('/Manager/removePresentation/:presentationID',function(req,res){
-
-  deletePresentation(id:number){
-    return this.http.get<any>(this.protocol + this.host + "/Manager" + "/removePresentation/" + id );
-  }
-
-
-  /*
-  app.post('/setHall/:username/:password',function(req,res){
-
-    app.get('/addHall/:username/:password',function(req,res){
-    
-     app.get('/getHall/:hallID',function(req,res){
-    
-     app.get('/removeHall/:username/:password/:hallID',function(req,res){
-    
-*/
 
 
 }

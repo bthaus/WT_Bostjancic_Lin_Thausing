@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dialog-sell-tickets',
@@ -20,6 +21,7 @@ export class DialogSellTicketsComponent {
 
   constructor(private formBuilder: FormBuilder,_formBuilder:FormBuilder,
     private api: ApiService,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public editData: any,
     private dialogRef: MatDialogRef<DialogComponent>,
     ){}
@@ -47,9 +49,10 @@ export class DialogSellTicketsComponent {
     .subscribe({
       next:(res)=>{
         this.dialogRef.close('added');
+        this.snackBar.open("Tickets sold.");
       },
       error:(err: any)=>{
-        alert("Error while fetching the Records.")
+        this.snackBar.open("Error while fetching the tickets record.");
       }
     })
   }
@@ -61,7 +64,7 @@ export class DialogSellTicketsComponent {
         this.Movies = res;
       },
       error:(err: any)=>{
-        alert("Error while fetching the Records.")
+        this.snackBar.open("Error while fetching the movie record.");
       }
     })
   }
@@ -92,7 +95,7 @@ export class DialogSellTicketsComponent {
         }
       },
       error:(err: any)=>{
-        alert("Error while fetching the Records.")
+        this.snackBar.open("Error while fetching the presentation record.");
       }
     })
   }
@@ -119,7 +122,7 @@ export class DialogSellTicketsComponent {
         this.ticketForm.controls['seatID'].setValue(null);
       },
       error:(err: any)=>{
-        alert("Error while fetching the Records.")
+        this.snackBar.open("Error while fetching the seat record.");
       }
     })
   }
@@ -135,8 +138,8 @@ export class DialogSellTicketsComponent {
               }
             }
           }
+          return false;
         }
-        return false;
       }
     }
     return false;

@@ -5,6 +5,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { firstValueFrom } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dilog-presentations',
@@ -21,6 +22,7 @@ export class DilogPresentationsComponent {
 
   constructor(private formBuilder: FormBuilder,
     private api: ApiService,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public editData: any,
     private dialogRef: MatDialogRef<DialogComponent>){
   }
@@ -54,7 +56,7 @@ export class DilogPresentationsComponent {
       },
       error:()=>{
         this.Movies=[];
-        alert("Error.")
+        this.snackBar.open("Error while fetching the Movies for the schedule.");
       }
     })
   }
@@ -71,7 +73,7 @@ export class DilogPresentationsComponent {
       },
       error:()=>{
         this.Halls=[];
-        alert("Error.")
+        this.snackBar.open("Error while fetching the Halls for the schedule.");
       }
     })
   }
@@ -89,15 +91,15 @@ export class DilogPresentationsComponent {
               this.dialogRef.close('added');
             },
             error:(res)=>{
-              alert(res.body);
+              this.snackBar.open("Error while adding the presentation.");
             }
           })
         }
       }else{
-        alert("Presentation interferes with another presentation. Please choose another date, time or hall.");
+        this.snackBar.open("Presentation interferes with another presentation. Please choose another date, time or hall.");
       }
     }else{
-      alert("Date and time invalid. The time has to be in the future.");
+      this.snackBar.open("Date and time invalid. The time has to be in the future.");
     }
   }
   

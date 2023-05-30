@@ -2,7 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '../services/api.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-seat-theatremanager-dialog',
@@ -27,6 +28,7 @@ export class SeatTheatremanagerDialogComponent {
   
   constructor(private _formBuilder: FormBuilder,private dialog: MatDialog,
     private api: ApiService,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public editData: any,
     ){}
   
@@ -42,7 +44,7 @@ export class SeatTheatremanagerDialogComponent {
         next:(res)=>{
         },
         error:()=>{
-          alert("Error")
+          this.snackBar.open("Error while updating features from seats.");
         }
       })
     }else{
@@ -52,7 +54,7 @@ export class SeatTheatremanagerDialogComponent {
         next:(res)=>{
         },
         error:()=>{
-          alert("Error")
+          this.snackBar.open("Error while removing features from seats.");
         }
       })
     }
@@ -65,7 +67,7 @@ export class SeatTheatremanagerDialogComponent {
         next:(res)=>{
         },
         error:()=>{
-          alert("Error")
+          this.snackBar.open("Error while updating seattypes from seats.");
         }
       })
   }

@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup,FormBuilder,Validators, FormControl } from '@angular/forms';
 import { ApiService } from '../services/api.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-edit-movie-dialog',
@@ -16,6 +17,7 @@ export class EditMovieDialogComponent {
 
   constructor(private formBuilder: FormBuilder,
     private api: ApiService,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public editData: any,
     private dialogRef: MatDialogRef<EditMovieDialogComponent>,
     ){}
@@ -44,12 +46,13 @@ export class EditMovieDialogComponent {
     this.api.putMovie(this.movieForm.value,this.editData)
     .subscribe({
       next:(res)=>{
-        console.log("Movie updated");
         this.movieForm.reset();
         this.dialogRef.close('updated');
+        this.snackBar.open("Movie updated.");
+
       },
       error:(err)=>{
-        alert("Error while updated the Record.")
+        this.snackBar.open("Error while fetching the Data.");
       }
     })
   }

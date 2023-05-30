@@ -155,8 +155,8 @@ module.exports = {
     getUsers: function () {
         return readFileByName("Users");
     },
-    containsUser: function (username, password, type) {
-        return containsUserimpl(username, password, type);
+    containsUser: function (username, password) {
+        return containsUserimpl(username, password);
     },
     adduser: function (username, password, type) {
         return addUser(new module.exports.User(username, password, type))
@@ -166,11 +166,11 @@ module.exports = {
         return removeUser(userID);
     },
     login: function (username, password, type) {
-        let ret = containsUserimpl(username, password, type);
+        let ret = containsUserimpl(username, password);
         if (ret == undefined) throw new Error("no such user found")
-        if (ret == false) throw new Error("password incorrect")
-        if (ret == true) {
-            return true;
+        if (ret == null) throw new Error("password incorrect")
+        if (ret) {
+            return ret;
         }
         throw new Error("unexpected Error");
     },
@@ -322,22 +322,24 @@ function getUserID(username,type){
 //returns: undefined: no user found
 //returns true: user found, password correct
 //returns false: user found, password incorrect
-function containsUserimpl(username, password, type) {
+function containsUserimpl(username, password) {
     let checker = false;
     let datauser;
+    let type = null;
     let data = readFileByName("Users")
     let list = JSON.parse(data);
     list.userlist.forEach(element => {
-        if (element.username === username && element.type === type) {
+        if (element.username === username) {
             checker = true;
             datauser = element;
+            type = element.type;
         }
     });
     if (checker) {
         console.log("user found")
         if (datauser.password === password) {
-            return true;
-        } else { return false; }
+            return type;
+        } else { return type; }
     }
 }
 //todo

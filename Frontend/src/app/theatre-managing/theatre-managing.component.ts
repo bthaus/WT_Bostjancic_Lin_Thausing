@@ -7,6 +7,8 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
 import { DialogHallsComponent } from '../dialog-halls/dialog-halls.component';
 import { SeatTheatremanagerDialogComponent } from '../seat-theatremanager-dialog/seat-theatremanager-dialog.component';
+import { AppComponent } from '../app.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-theatre-managing',
@@ -23,12 +25,14 @@ export class TheatreManagingComponent {
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private dialog: MatDialog,
     private api: ApiService,
+    private snackBar: MatSnackBar,
+    private appComponent:AppComponent
     ){}
 
 
   ngOnInit(): void {
     this.getAllTheatres();
-    console.log(this.getAllTheatres);
+   // console.log(this.getAllTheatres);
   }
   
   openTheatreDia() {
@@ -56,7 +60,7 @@ export class TheatreManagingComponent {
         this.dataSource.sort = this.sort;
       },
       error:(err: any)=>{
-        alert("Error while fetching the Records.")
+        this.snackBar.open("Error while fetching theatre data");     
       }
     })
   }
@@ -76,8 +80,8 @@ export class TheatreManagingComponent {
       next:(res)=>{
         this.getAllTheatres();
       },
-      error:()=>{
-        alert("Error while deleting..");
+      error:(err:any)=>{
+        this.snackBar.open("Error while deleting theatres.");      
       }
     })
   }

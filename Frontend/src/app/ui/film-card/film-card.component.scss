@@ -1,0 +1,25 @@
+img.pew {
+    transform: scale(.5) !important;
+}
+
+mat-card {
+    background: rgb(81, 80, 80) !important;
+}
+
+mat-card-title {
+    font-size: x-large !important;
+    color: #f0ffff;
+}
+
+mat-card-subtitle.subtitle-withIcon {
+    display: flex !important;
+    align-items: center !important;
+}
+
+mat-card-content {
+    color: #f0ffffd5;
+}
+
+mat-card-header {
+    margin-bottom: 1rem;
+}

@@ -1,31 +1,38 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ProgramComponent } from './program/program.component';
-import { PurchasesComponent } from './purchases/purchases.component';
-import { SoonComponent } from './soon/soon.component';
 import { HomeComponent } from "./home/home.component";
-import { LoginComponent } from './login/login.component';
-import { MovieComponent } from './movie/movie.component';
 import { CommonModule } from '@angular/common';
 import { TheatreManagingComponent } from './theatre-managing/theatre-managing.component';
-import { ViewMoviesComponent } from './view-movies/view-movies.component';
 import { PresentationManagerComponent } from './presentation-manager/presentation-manager.component';
 import { ManagementSellTicketsComponent } from './management-sell-tickets/management-sell-tickets.component';
+import { ManagerActivate } from './app.component';
+
+import { LoginComponent } from './view/login/login.component';
+import { ViewMoviesComponent } from './view-movies/view-movies.component';
+import { ProgramComponent } from './view/program/program.component';
+import { BookingsComponent } from './view/booking/bookings/bookings.component';
+import { TicketComponent } from './view/ticket-overview/ticket/ticket.component';
+
 
 const routes: Routes = [
-  { path: "", component: HomeComponent },
+  { path: '', component: HomeComponent },
+  //Customer Routes
   { path: 'program', component: ProgramComponent },
-  { path: 'purchases', component: PurchasesComponent },
-  { path: 'soon', component: SoonComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'movie', component: MovieComponent },
-  //ManagementMovie
-    { path: 'theatre', component: TheatreManagingComponent },
-    { path: 'movieManagement', component: ViewMoviesComponent },
-    { path: 'presentation', component: PresentationManagerComponent },
-    { path: 'sellTickets', component: ManagementSellTicketsComponent }
+  { path: 'booking', component: BookingsComponent },
+    { path: 'ticket', component: TicketComponent},
 
-  
+
+
+  //Used rn for login route
+
+  { path: 'login', component: LoginComponent },
+
+  //ManagementMovie
+    { path: 'theatre', component: TheatreManagingComponent, canActivate: [ManagerActivate]},
+    { path: 'movieManagement', component: ViewMoviesComponent, canActivate: [ManagerActivate]},
+    { path: 'presentation', component: PresentationManagerComponent, canActivate: [ManagerActivate]},
+    { path: 'sellTickets', component: ManagementSellTicketsComponent, canActivate: [ManagerActivate]}
+
 ];
 
 @NgModule({

@@ -1,0 +1,37 @@
+:host {
+    display: flex !important;
+    justify-content: center !important;
+    margin: 100px 0px !important;
+}
+
+mat-form-field {
+    width: 100% !important;
+    min-width: 300px !important;
+}
+
+mat-card-title,
+mat-card-content {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+mat-card-title {
+    font-size: x-large;
+    color: rgb(217, 217, 217);
+}
+
+button {
+    display: flex !important;
+    justify-content: flex-end !important;
+    color: #FFF9A8 !important;
+}
+
+.mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: #FFF9A8 !important;
+}
+
+.mat-form-field-ripple {
+    /*change color of underline when focused*/
+    background-color: #FFF9A8 !important;
+}

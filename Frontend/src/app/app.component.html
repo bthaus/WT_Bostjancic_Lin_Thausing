@@ -1,27 +1,47 @@
 <mat-toolbar *ngIf="(authService.isLoggedIn$ | async ) == false" color="primary" class="bg-gradient-to-r from-cyan-500 to-blue-500">
   <div class="flex w-full justify-between ">
-    <span class="text-3xl font-bold">LOGOOOOOOOOO</span>
-    <div class="flex justify-center gap-x-10">
-      <a href="program">Kinoprogram</a>
-      <a href="soon">Bald im Kino</a>
-      <a href="purchases">Deine Bestellungen</a>
-    </div>
-    <div class="flex justify-end"><a href="login">Login</a></div>
+    <span class="text-3xl font-bold">Cinema View</span>
+    <a mat-raised-button class="link" href="/program">Program</a>
+    <a  mat-raised-button class="link" href="/login">Login</a>
+  
   </div>
+
 </mat-toolbar>
 
-<mat-toolbar *ngIf="authService.isLoggedIn$ | async " color="primary">
+<mat-toolbar *ngIf="(authService.isLoggedIn$ | async) && authService.isManager()" color="primary">
   <button  class="example-icon" aria-label="Example icon-button with menu icon">
     <mat-icon>menu</mat-icon>
   </button>
   <span>Managment View</span>
-   <a mat-raised-button class="link" href="">Home</a>
+
     <a mat-raised-button class="link" href="/movieManagement">Movie</a>
 
     <a mat-raised-button class="link" href="/theatre">Theatre</a>
     <a  mat-raised-button class="link" href="/presentation">Presentation</a>
 
     <a  mat-raised-button class="link" href="/sellTickets">Sell Tickets</a>
+  
+  <a mat-raised-button color="warn" (click)="logout()">Logout</a>
+
+
+
+</mat-toolbar>
+
+<mat-toolbar *ngIf="(authService.isLoggedIn$ | async) && authService.isCustomer()" color="primary">
+  <button  class="example-icon" aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Managment View</span>
+
+   <a mat-raised-button class="link" href="">Home</a>
+    <a mat-raised-button class="link" href="/program">Program</a>
+
+    <a mat-raised-button class="link" href="/booking">Bookings</a>
+    <a  mat-raised-button class="link" href="/ticket">Tickets</a>
+
+  
+  <a mat-raised-button color="warn" (click)="logout()">Logout</a>
+
 
 
 </mat-toolbar>

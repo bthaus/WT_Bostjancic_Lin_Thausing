@@ -105,19 +105,22 @@ app.get('/getCinema',function(req,res){
 app.post('/login',function(req,res){
     console.log("Logging in")
 
-    const token=generateAccessToken(req.body.username,req.body.type);
-    token.role=req.params.type;
+    let result;
     if(debugging){console.log("login request from "+req.body.username+" with pw "+req.body.password)
     }
     try {
-        let result=JsonHandler.login(req.body.username,req.body.password,req.body.type);
+        result=JsonHandler.login(req.body.username,req.body.password);
     } catch (error) {
         console.log(error.message)
         res.status(404);
         res.json(error.message);
         return;
     }
-    res.json(token);
+
+    const token=generateAccessToken(req.body.username, result);
+    token.role=result;
+
+    res.json({"token":token, "type":result});
 })
 //input: username, passwort und type als string
 //output: JSON User/error 404 sorry cant find that

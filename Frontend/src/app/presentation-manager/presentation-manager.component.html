@@ -18,39 +18,39 @@
         <!-- displayedColumns: string[] = ['MovieID','MovieTitle' 'Date', 'HallID', 'edit']; -->
 
         <!-- InputBox MovieID-->
-        <ng-container matColumnDef="ID">
+        <ng-container matColumnDef="presentationID">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-          <td mat-cell *matCellDef="let row"> {{row.presentation.ID}}</td>
+          <td mat-cell *matCellDef="let row"> {{row.presentationID}}</td>
         </ng-container>
         
         <!-- Name Column -->
-        <ng-container matColumnDef="MovieTitle">
+        <ng-container matColumnDef="movieName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> MovieTitle </th>
-          <td mat-cell *matCellDef="let row"> {{row.presentation.movie.name}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.movieName}} </td>
         </ng-container>
     
     
         <!-- Progress Column -->
-        <ng-container matColumnDef="Date">
+        <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-          <td mat-cell *matCellDef="let row"> {{getDate(row.presentation.start)}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.date}} </td>
         </ng-container>
     
         <!-- Name Column -->
-        <ng-container matColumnDef="HallID">
+        <ng-container matColumnDef="hallID">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> HallID </th>
-          <td mat-cell *matCellDef="let row"> {{row.ID}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.hallID}} </td>
         </ng-container>
     
      
     
         <ng-container matColumnDef="edit">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disabled> Action </th>
           <td mat-cell *matCellDef="let row">
            
 
             <button mat-icon-button color="warn" (click)=
-            "deletePresentation(row.presentation.ID)">
+            "deletePresentation(row.presentationID)">
               <mat-icon> delete </mat-icon>
             </button> 
           </td>

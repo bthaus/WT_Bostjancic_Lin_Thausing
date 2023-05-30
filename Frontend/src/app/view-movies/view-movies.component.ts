@@ -8,6 +8,8 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
 import { EditMovieDialogComponent } from '../edit-movie-dialog/edit-movie-dialog.component';
 import { DialogManagerCommentsComponent } from '../dialog-manager-comments/dialog-manager-comments.component';
+import { AppComponent } from '../app.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-view-movies',
@@ -16,18 +18,19 @@ import { DialogManagerCommentsComponent } from '../dialog-manager-comments/dialo
 })
 export class ViewMoviesComponent {
  
-  displayedColumns: string[] = ['id','name', 'description', 'duration', 'minimumAge', 'edit'];
+  displayedColumns: string[] = ['ID','name', 'description', 'duration', 'minimumAge', 'edit'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private dialog: MatDialog,
-    private api: ApiService,
+    private snackBar: MatSnackBar,
+    private api: ApiService, private appComponent:AppComponent
     ){}
 
   ngOnInit(): void {
     this.getAllMovies();
-    console.log(this.getAllMovies);
+    //console.log(this.getAllMovies);
 
   }
   
@@ -48,13 +51,13 @@ export class ViewMoviesComponent {
         this.dataSource.sort = this.sort;
       },
       error:(err: any)=>{
-        alert("Error while fetching the Records.")
+        this.snackBar.open("Error while fetching movie data");      
       }
     })
   }
 
   editMovie(row: any){
-    this.dialog.open(EditMovieDialogComponent,{
+    this.dialog.open(DialogComponent,{
       width:'30%',
       data:row
     }).afterClosed().subscribe(result => {
@@ -78,8 +81,8 @@ export class ViewMoviesComponent {
       next:(res)=>{
         this.getAllMovies();
       },
-      error:()=>{
-        alert("Error while deleting");
+      error:(err)=>{
+        this.snackBar.open("Error could not delete movie");
       }
     })
   }

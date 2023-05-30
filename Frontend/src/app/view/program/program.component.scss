@@ -1,0 +1,10 @@
+div.film-card {
+    flex: 1 0 20%;
+    margin: .5rem;
+}
+
+div.flex {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 10;
+}

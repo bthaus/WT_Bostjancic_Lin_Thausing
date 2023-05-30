@@ -2,6 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup,FormBuilder,Validators, FormControl } from '@angular/forms';
 import { ApiService } from '../services/api.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-dialog',
@@ -13,25 +15,24 @@ export class DialogComponent {
 
   movieForm !: FormGroup;
   actionBtn: string = "Save";
-
+ 
   constructor(private formBuilder: FormBuilder,
     private api: ApiService,
     @Inject(MAT_DIALOG_DATA) public editData: any,
     private dialogRef: MatDialogRef<DialogComponent>,
+    public snackBar: MatSnackBar
     ){}
 
   ngOnInit(): void{
     this.movieForm = this.formBuilder.group({
-      'movieTitle': new FormControl('',[Validators.required]),
-      'description':new FormControl('',[Validators.required]),
-      'duration': new FormControl('',[Validators.required]),
-      'minAge':new FormControl('',[Validators.required])
+      'movieTitle': new FormControl('',[Validators.required, Validators.minLength(1), Validators.maxLength(60)]),
+      'description':new FormControl('',[Validators.required, Validators.minLength(1), Validators.maxLength(250)]),
+      'duration': new FormControl('',[Validators.required,Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(1), Validators.max(600)],),
+      'minAge':new FormControl('',[Validators.required,Validators.pattern(/^-?(0|[1-9]\d*)?$/), Validators.min(0), Validators.max(100)])
     });
 
     if(this.editData){
       this.actionBtn = "Update";
-      //this.movieForm.controls['ID'].setValue(this.editData.ID);
-
       this.movieForm.controls['movieTitle'].setValue(this.editData.name);
       this.movieForm.controls['description'].setValue(this.editData.description);
       this.movieForm.controls['duration'].setValue(this.editData.duration);
@@ -47,9 +48,10 @@ export class DialogComponent {
           //if success run this
           next:(res)=>{
             this.dialogRef.close('added');
+            this.snackBar.open("Movie added successfully");
           },
-          error:()=>{
-            alert("Movie could not be added.")
+          error:(err:any)=>{
+            this.snackBar.open("Movie could not be added.");
           }
         })
       }
@@ -58,16 +60,16 @@ export class DialogComponent {
   }    
   }
   updateMovie(){
-    this.api.putMovie(this.movieForm.value,this.editData.id)
+    this.api.putMovie(this.movieForm.value,this.editData)
     .subscribe({
       next:(res)=>{
-        alert("Updated")
-        console.log("Movie updated");
+        this.snackBar.open("Movie updated successfully.");
         this.movieForm.reset();
         this.dialogRef.close('updated');
       },
       error:(err)=>{
-        alert("Error while updated the Record.")
+       this.snackBar.open("Error while fetching movie data..");
+
       }
     })
   }

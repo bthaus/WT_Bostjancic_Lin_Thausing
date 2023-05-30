@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '../services/api.service';
 import { DialogSellTicketsComponent } from '../dialog-sell-tickets/dialog-sell-tickets.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-management-sell-tickets',
@@ -13,7 +14,7 @@ import { DialogSellTicketsComponent } from '../dialog-sell-tickets/dialog-sell-t
 })
 export class ManagementSellTicketsComponent {
   [x: string]: any;
-  displayedColumns: string[] = ['TicketID', 'MovieTitle', 'Date', 'HallID', 'Row', 'Number', 'Type', 'edit'];
+  displayedColumns: string[] = ['ticketID', 'movieName', 'date', 'hallID', 'seatRow', 'seatNumber', 'seatType', 'edit'];
   dataSource!: MatTableDataSource<any>;
 
   
@@ -21,10 +22,25 @@ export class ManagementSellTicketsComponent {
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private dialog: MatDialog,
     private api: ApiService,
-    ){}
-
+    private snackBar: MatSnackBar,
+    ){
+      /*
+      this.dataSource.filterPredicate = (data: Element, filter: string) => {
+        return 0;
+        */
+      }
+   // }
+   // dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
+/*
+    applyFilter(filterValue) {
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+      }
+      */
+    
   ngOnInit(): void {
     this.getAllTickets();
+    console.log(this.getAllTickets);
+    //console.log(this.dataSource.data);
   }
 
   getAllTickets(){
@@ -40,7 +56,9 @@ export class ManagementSellTicketsComponent {
               for(let j = 0; j < obj.halls[i].presentations.length; j++){
                 if(obj.halls[i].presentations[j].tickets != undefined){
                   for(let g = 0; g < obj.halls[i].presentations[j].tickets.length; g++){
-                    tickets.push({"ID":obj.halls[i].presentations[j].ID, "date": obj.halls[i].presentations[j].start, "ticket": obj.halls[i].presentations[j].tickets[g]});
+                    tickets.push({"ID":obj.halls[i].presentations[j].ID, "date": this.getDate(obj.halls[i].presentations[j].start),  "ticketID": obj.halls[i].presentations[j].tickets[g].ID,
+                    "movieName": obj.halls[i].presentations[j].tickets[g].movie.name, "hallID": obj.halls[i].presentations[j].tickets[g].hallID, "seatRow": obj.halls[i].presentations[j].tickets[g].seat.row,
+                    "seatNumber": obj.halls[i].presentations[j].tickets[g].seat.number, "seatType": obj.halls[i].presentations[j].tickets[g].seat.type});
                   }
                 }
               }
@@ -49,12 +67,11 @@ export class ManagementSellTicketsComponent {
         }
 
         this.dataSource = new MatTableDataSource(tickets);
-        //console.log(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
       error:(err)=>{
-        alert("Error while fetching the Records.")
+        this.snackBar.open("Error while fetching the tickets");
       }
     })
   }
@@ -85,18 +102,18 @@ export class ManagementSellTicketsComponent {
         next:(res)=>{
           this.getAllTickets();
         },
-        error:()=>{
-          alert("Error while deleting");
-        }
+        error:(err:any)=>{
+          this.snackBar.open("Error while deleting ticket");        }
       })
     }else{
-      alert("Tickets can only be returned/deleted if the screening is at least one hour in the future");
+      this.snackBar.open("Tickets can only be returned/deleted if the screening is at least one hour in the future");
     }
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();

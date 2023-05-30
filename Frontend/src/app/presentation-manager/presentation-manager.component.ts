@@ -6,6 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
 import { DilogPresentationsComponent } from '../dilog-presentations/dilog-presentations.component';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-presentation-manager',
@@ -14,13 +17,16 @@ import { DilogPresentationsComponent } from '../dilog-presentations/dilog-presen
 })
 export class PresentationManagerComponent {
   [x: string]: any;
-  displayedColumns: string[] = ['ID', 'MovieTitle','Date', 'HallID', 'edit'];
+  displayedColumns: string[] = ['presentationID', 'movieName','date', 'hallID', 'edit'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private dialog: MatDialog,
-    private api: ApiService,
+    private api: ApiService, 
+    private router:Router,
+    private authService:AuthService,
+    private snackBar: MatSnackBar,
     ){}
 
   ngOnInit(): void {
@@ -45,19 +51,18 @@ export class PresentationManagerComponent {
         for(let i = 0; i < obj.halls.length; i++){
           if(obj.halls[i].presentations != undefined){
             for(let j = 0; j < obj.halls[i].presentations.length; j++){
-              presentations.push({"ID": obj.halls[i].ID, "presentation": obj.halls[i].presentations[j]});
+              presentations.push({"hallID": obj.halls[i].ID, "presentationID":  obj.halls[i].presentations[j].ID, "movieName": obj.halls[i].presentations[j].movie.name, "date": this.getDate(obj.halls[i].presentations[j].start)});
             }
           }
         }
 
 
         this.dataSource = new MatTableDataSource(presentations);
-        //console.log(JSON.stringify(presentations));
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      error:(err)=>{
-        alert("Error while fetching the Records.")
+      error:(err:any)=>{
+        this.snackBar.open("Error while fetching presentation data.");
       }
     })
   }
@@ -76,7 +81,7 @@ export class PresentationManagerComponent {
         this.dataSource.sort = this.sort;
       },
       error:(err)=>{
-        alert("Error while fetching the Records.")
+        this.snackBar.open("Error while fetching presentation data");
       }
     })
   }
@@ -98,8 +103,8 @@ export class PresentationManagerComponent {
       next:(res)=>{
         this.getAllPresentation();
       },
-      error:()=>{
-        alert("Error while delete");
+      error:(err)=>{
+        this.snackBar.open("Error while deleting presentation data");
       }
     })
   }

@@ -6,6 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
 import { DialogHallsComponent } from '../dialog-halls/dialog-halls.component';
+import { SeatTheatremanagerDialogComponent } from '../seat-theatremanager-dialog/seat-theatremanager-dialog.component';
+import { AppComponent } from '../app.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-theatre-managing',
@@ -15,24 +18,28 @@ import { DialogHallsComponent } from '../dialog-halls/dialog-halls.component';
 export class TheatreManagingComponent {
 
   [x: string]: any;
-  displayedColumns: string[] = ['ID', 'feature','num', 'edit'];
+  displayedColumns: string[] = ['ID', 'feature','numSeats', 'edit'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private dialog: MatDialog,
     private api: ApiService,
+    private snackBar: MatSnackBar,
+    private appComponent:AppComponent
     ){}
 
 
   ngOnInit(): void {
     this.getAllTheatres();
-    console.log(this.getAllTheatres);
+   // console.log(this.getAllTheatres);
   }
   
   openTheatreDia() {
     this.dialog.open(DialogHallsComponent, {
       width:'26%'
+    }).afterClosed().subscribe(result => {
+      this.getAllTheatres();
     });
   }
 
@@ -53,26 +60,28 @@ export class TheatreManagingComponent {
         this.dataSource.sort = this.sort;
       },
       error:(err: any)=>{
-        alert("Error while fetching the Records.")
+        this.snackBar.open("Error while fetching theatre data");     
       }
     })
   }
 
   editHall(row: any){
-    this.dialog.open(DialogComponent,{
+    this.dialog.open(SeatTheatremanagerDialogComponent,{
       width:'30%',
       data:row
-    })
+    }).afterClosed().subscribe(result => {
+      this.getAllTheatres();
+    });
   }
 
   deleteTheatre(id:number){
     this.api.deleteHall(id)
     .subscribe({
       next:(res)=>{
-        alert("Success");
+        this.getAllTheatres();
       },
-      error:()=>{
-        alert("Error while deleting..");
+      error:(err:any)=>{
+        this.snackBar.open("Error while deleting theatres.");      
       }
     })
   }

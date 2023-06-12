@@ -1,34 +1,27 @@
 <h1 mat-dialog-title>Add Theatre Form</h1>
-
 <div mat-dialog-content>
-    <form [formGroup] ="theatreForm">
-        
-    <mat-form-field appearance="outline">
-        <mat-label>
-            Features
-        </mat-label>
-        <input formControlName="features" matInput placeholder="Features"/>
+    <form [formGroup] ="theatreForm"> 
 
-    </mat-form-field>
+        <mat-form-field>
+            <mat-select placeholder="Theatre Feature" formControlName="features" multiple >
+                <mat-option ng-selected *ngFor="let feature of allFeatures" value="{{feature}}">{{feature}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
     
-    <mat-form-field appearance="outline">
-        <mat-label>
-            Number of Seats in a Row
-        </mat-label>
-        <input formControlName="colSeats" matInput placeholder="5"/>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-        <mat-label>
-            Number of Seat rows
-        </mat-label>
-        <input formControlName="rowSeats" matInput placeholder="5"/>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label> Number of Rows</mat-label>
+            <input formControlName="colSeats" matInput placeholder="5"/>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline">
+            <mat-label> Number of Seats</mat-label>
+            <input formControlName="rowSeats" matInput placeholder="5"/>
+        </mat-form-field>
     </form>
 </div>
 
 <div mat-dialog-action [align]="'end'">
     <button mat-raised-button color="warn" mat-dialog-close >Close</button>
     <button class="svnBtn" mat-raised-button color="primary" (click)="addTheatre()">{{actionBtn}}</button>
-
 </div>

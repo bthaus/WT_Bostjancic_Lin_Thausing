@@ -6,6 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
 import { DilogPresentationsComponent } from '../dilog-presentations/dilog-presentations.component';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-presentation-manager',
@@ -14,13 +17,16 @@ import { DilogPresentationsComponent } from '../dilog-presentations/dilog-presen
 })
 export class PresentationManagerComponent {
   [x: string]: any;
-  displayedColumns: string[] = ['MovieID', 'MovieTitle','Date', 'HallID', 'edit'];
+  displayedColumns: string[] = ['presentationID', 'movieName','date', 'hallID', 'edit'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private dialog: MatDialog,
-    private api: ApiService,
+    private api: ApiService, 
+    private router:Router,
+    private authService:AuthService,
+    private snackBar: MatSnackBar,
     ){}
 
   ngOnInit(): void {
@@ -30,6 +36,8 @@ export class PresentationManagerComponent {
   openDialogP() {
     this.dialog.open(DilogPresentationsComponent, {
       width:'26%'
+    }).afterClosed().subscribe(result => {
+      this.getAllPresentation();
     });
   }
 
@@ -41,21 +49,26 @@ export class PresentationManagerComponent {
         var presentations = new Array();
 
         for(let i = 0; i < obj.halls.length; i++){
-          for(let j = 0; j < obj.halls[i].presentations.length; j++){
-            presentations.push(obj.halls[i].presentations[j]);
+          if(obj.halls[i].presentations != undefined){
+            for(let j = 0; j < obj.halls[i].presentations.length; j++){
+              presentations.push({"hallID": obj.halls[i].ID, "presentationID":  obj.halls[i].presentations[j].ID, "movieName": obj.halls[i].presentations[j].movie.name, "date": this.getDate(obj.halls[i].presentations[j].start)});
+            }
           }
         }
 
 
         this.dataSource = new MatTableDataSource(presentations);
-        //console.log(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      error:(err)=>{
-        alert("Error while fetching the Records.")
+      error:(err:any)=>{
+        this.snackBar.open("Error while fetching presentation data.");
       }
     })
+  }
+
+  getDate(dateString:string){
+    return new Date(dateString).toLocaleString();
   }
 
   getAllMoviesPresentation(){
@@ -68,7 +81,7 @@ export class PresentationManagerComponent {
         this.dataSource.sort = this.sort;
       },
       error:(err)=>{
-        alert("Error while fetching the Records.")
+        this.snackBar.open("Error while fetching presentation data");
       }
     })
   }
@@ -78,6 +91,8 @@ export class PresentationManagerComponent {
     this.dialog.open(DialogComponent,{
       width:'30%',
       data:row
+    }).afterClosed().subscribe(result => {
+      this.getAllPresentation();
     })
   }
 
@@ -86,11 +101,10 @@ export class PresentationManagerComponent {
     this.api.deletePresentation(id)
     .subscribe({
       next:(res)=>{
-        alert("Success");
-
+        this.getAllPresentation();
       },
-      error:()=>{
-        alert("Error while delete");
+      error:(err)=>{
+        this.snackBar.open("Error while deleting presentation data");
       }
     })
   }

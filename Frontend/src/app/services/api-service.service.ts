@@ -1,11 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Data } from '@angular/router';
+import { map } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs/internal/observable/of';
+import { Films } from 'src/assets/json-objects/IFilm';
+import { Hall, Halls, Presentation, Seats } from 'src/assets/json-objects/IHall';
+import { Review } from 'src/assets/json-objects/IReviews';
+import { Ticket, Tickets, User, Users } from 'src/assets/json-objects/IUsers';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+  [x: string]: any;
 
  protocol = "http://";
  host= "localhost:3000";
@@ -70,51 +78,30 @@ User:any;
   deletePresentation(id:number){
     return this.http.get<any>(this.protocol + this.host + "/Manager" + "/removePresentation/" + id );
   }
+  private _jsonPATH = 'assets/json-data/';
 
- ///Manager/addPresentation/:movieID/:date/:hallID'
+  private  movieData = this._jsonPATH + "Movies.json";
 
-/*
-  addHall(data: any){
-    return this.http.get(this.protocol + this.host + "/addMovie/");
-  }
-  //
- 
-//app.get('/Manager/removeHall/:hallID',function(req,res){
-  //Call remove CinemaHall
-  deleteHall(cinemaID: number){
-    return this.http.get<any>(this.protocol + this.host + "/removeHall/"  + this.username+ "/"+ this.passw+"/" +cinemaID);
+
+  public getFilms(): Observable<Films> {
+    console.log(this.movieData);
+    return JSON.parse(this.movieData);
   }
 
-  //Calls for CinemaSeats
-  addSeat(data: any){
-    return this.http.get(this.protocol + this.host + "/addSeat/" + this.username+ "/"+ this.passw+ "/" + data.hallID+ "/"+ data.type+ "/" + data.row+"/"+ data.number);
+  public getHallsByFilmId(id: number): Observable<Halls> {
+    let observable: Observable<Halls> = this['getJSON']("Cinema.json");
+    observable.pipe(map((halls: Halls) => {
+      let hallContainsMovie: boolean = false;
+      halls.forEach((hall: Hall) => {
+        hall.presentations.forEach((presentation: Presentation) => {
+          if (presentation.movie.id === id) {
+            hallContainsMovie = true;
+            return;
+          }
+        });
+      });
+      return hallContainsMovie;
+    }));
+    return observable;
   }
-
-  removeSeats(seatID: number, hallID: number){
-    return this.http.get<any>(this.protocol + this.host + "/removeSeat/"  + this.username+ "/"+ this.passw+"/" + seatID + "/" + hallID);
-  }
-
-  //Presentation
-    addPresentation(data:any){
-      return this.http.get<any>(this.protocol + this.host + "/Manager" +"/addPresentation/" + data.movieID+"/"+data.date+"/"+data.hallID );
-    }
-//app.get('/Manager/removePresentation/:presentationID',function(req,res){
-
-  deletePresentation(id:number){
-    return this.http.get<any>(this.protocol + this.host + "/Manager" + "/removePresentation/" + id );
-  }
-
-
-  /*
-  app.post('/setHall/:username/:password',function(req,res){
-
-    app.get('/addHall/:username/:password',function(req,res){
-    
-     app.get('/getHall/:hallID',function(req,res){
-    
-     app.get('/removeHall/:username/:password/:hallID',function(req,res){
-    
-*/
-
-
 }

@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { ApiService } from '../services/api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dialog-halls',
@@ -13,18 +14,22 @@ export class DialogHallsComponent {
   [x: string]: any;
   theatreForm !: FormGroup;
   actionBtn: string = "Save";
+  allFeatures: string[] | undefined;
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(private formBuilder: FormBuilder,_formBuilder:FormBuilder,
     private api: ApiService,
     @Inject(MAT_DIALOG_DATA) public editData: any,
     private dialogRef: MatDialogRef<DialogComponent>,
+    public snackBar: MatSnackBar
     ){}
 
   ngOnInit(): void{
+
+    this.allFeatures =  ['3d', '4d', 'atmos', 'hdr', '4k'];
     this.theatreForm = this.formBuilder.group({
-      'features':new FormControl('',[Validators.required]),
-      'colSeats': new FormControl('',[Validators.required]),
-      'rowSeats': new FormControl('',[Validators.required])
+      'features':new FormControl(''),
+      'colSeats': new FormControl('',[Validators.required,Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+      'rowSeats': new FormControl('',[Validators.required,Validators.pattern(/^-?(0|[1-9]\d*)?$/)])
     });
 
     if(this.editData){
@@ -33,7 +38,6 @@ export class DialogHallsComponent {
       this.theatreForm.controls['colSeats'].setValue(this.editData.colSeats);
       this.theatreForm.controls['rowSeats'].setValue(this.editData.rowSeats);
     }
-
   }
 
   addTheatre(){
@@ -42,19 +46,14 @@ export class DialogHallsComponent {
         this.api.addHall(this.theatreForm.value)
         .subscribe({
           next:(res)=>{
-            alert("Theatre added");
+            this.dialogRef.close('added');
+            this.snackBar.open("Theatre successfully added.");
           },
-          error:()=>{
-            alert("Theatre could not be added.")
+          error:(err)=>{
+            this.snackBar.open("Error, theatre could not added.");
           }
         })
       }
-    }else{
-     //Call for update TheatreHall
-     this.updateTheatre(); 
-  }    
-}
-  updateTheatre(){
-      console.log("Hello");
+    }   
   }
 }

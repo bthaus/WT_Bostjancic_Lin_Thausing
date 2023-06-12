@@ -1,0 +1,30 @@
+div.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+
+    .cancel-ticket {
+        cursor: pointer;
+        color: #e2725b;
+        margin-left: 2rem;
+        transform: scale(1.3);
+    }
+
+    .viewQR {
+        margin-left: 2rem;
+        background-color: #3f826d;
+        color: black;
+        background-image: url(/assets/images/qr-code.png);
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+    }
+
+    mat-icon.notcancable {
+        cursor: default;
+        color: #656160;
+        margin-left: 2rem;
+        transform: scale(1.3);
+    }
+}

@@ -48,16 +48,14 @@ export class LoginComponent {
 
   login() {
     const val = this.loginForm.value;
-    console.log(this.loginForm.value);
-
     if (val.username && val.password && val.type) {
-        this.authService.login(val.username, val.password,val.type)
+        this.authService.login(val.username, val.password)
             .subscribe(
                 () => {
                     console.log("User is logged in");
                     var type:any = val.type;
                     if(type == "Customer"){
-                      this.router.navigateByUrl('/movie');
+                      this.router.navigateByUrl('/program');
                     }
                     else{
                       this.router.navigateByUrl('/presentation');

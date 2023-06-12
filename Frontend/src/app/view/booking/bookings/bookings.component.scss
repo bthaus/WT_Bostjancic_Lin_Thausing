@@ -1,0 +1,32 @@
+.button {
+    display: flex;
+    justify-content: flex-end;
+    color: #FFF9A8;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: #FFF9A8 !important;
+}
+
+::ng-deep.mat-form-field-ripple {
+    /*change color of underline when focused*/
+    background-color: #FFF9A8 !important;
+}
+
+h1 {
+    font: xx-large;
+    color: rgb(65, 64, 64);
+}
+
+a.back-btn {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    color: #FFF9A8;
+    transform: scale(1.5);
+}
+
+a.back-btn:hover {
+    cursor: pointer;
+}

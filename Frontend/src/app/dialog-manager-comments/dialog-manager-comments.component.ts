@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dialog-manager-comments',
@@ -19,6 +20,8 @@ export class DialogManagerCommentsComponent implements OnInit {
 @ViewChild(MatSort) sort!: MatSort;
 constructor(private dialog: MatDialog,
   private api: ApiService,
+  private snackBar: MatSnackBar,
+
   @Inject(MAT_DIALOG_DATA) public editData: any,
   ){}
 
@@ -31,9 +34,11 @@ deleteReview(index:number){
   .subscribe({
     next:(res)=>{
       this.dataSource = new MatTableDataSource(this.editData.reviews);
+      this.snackBar.open("Comment successfully deleted.");
+
     },
     error:(err)=>{
-      alert("Error while updated the Record.")
+      this.snackBar.open("Comment could not be deleted.");
     }
   })
 }

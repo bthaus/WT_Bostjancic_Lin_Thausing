@@ -25,19 +25,19 @@
         </ng-container>
         <!-- InputBox Typ-->
         <ng-container matColumnDef="feature">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Features </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disabled> Features </th>
           <td mat-cell *matCellDef="let row"> {{row.features}}</td>
         </ng-container>
         
         <!-- InputBox NumOfSeats-->
-        <ng-container matColumnDef="num">
+        <ng-container matColumnDef="numSeats">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Number of Seats </th>
           <td mat-cell *matCellDef="let row"> {{row.numSeats}}</td>
         </ng-container>
 
         <!-- Action-->
         <ng-container matColumnDef="edit">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Action </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disabled> Action </th>
           <td mat-cell *matCellDef="let row">
 
             <button mat-icon-button (click)="editHall(row)" color="primary">

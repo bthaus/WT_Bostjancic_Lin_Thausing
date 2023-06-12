@@ -1,0 +1,34 @@
+{
+    "userlist": [
+        {
+            "ID": 0,
+            "username": "Bodo",
+            "password": "BodoPasswort",
+            "type": "Manager"
+        },
+        {
+            "ID": 0,
+            "username": "Panda",
+            "password": "PandaPW",
+            "type": "Manager"
+        },
+        {
+            "ID": 0,
+            "username": "melly",
+            "password": "mellyPW",
+            "type": "Customer"
+        },
+        {
+            "ID": 0,
+            "username": "Martin",
+            "password": "martinpw",
+            "type": "Customer"
+        },
+        {
+            "ID": 0,
+            "username": "John",
+            "password": "johnpw",
+            "type": "Customer"
+        }
+    ]
+}
